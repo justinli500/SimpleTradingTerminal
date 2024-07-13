@@ -39,10 +39,17 @@ public class App {
         // List<Instrument> instruments = SimpleTerminal
         // .loadInstruments("../../../../../../../债券信息1.csv");
 
-        List<Instrument> instruments = SimpleTerminal
-                .loadInstruments("./债券信息1.csv");
+        SimpleTerminal terminal = new SimpleTerminal();
+        terminal.loadInstruments("./债券信息1.csv");
+        terminal.selectInstrument("XS2858459634");
+        System.out.println(terminal.getInstrument());
 
-        System.out.println(instruments.get(0));
+        terminal.addTransaction("iCode", "date", "buy", 123,
+                123,
+                123, "settlementDate", 123);
+        terminal.writeTransactions();
+
+        // System.out.println(instruments.get(0));
 
     }
 }
