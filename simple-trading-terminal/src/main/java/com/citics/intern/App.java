@@ -62,7 +62,8 @@ public class App {
             } catch (Exception e) {
                 System.out.println(
                         "Exception reached. Invalid command or file name or parameter, or certain attributes haven't been setup yet.");
-                // TODO: handle exception
+                System.out.println(e);
+                // TODO: handle exception better
             }
             counter++;
         }

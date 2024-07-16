@@ -49,11 +49,11 @@ public class SimpleTerminal {
 
     public void command(String input) throws IllegalArgumentException {
         String[] inputs = input.split(" ");
-        if (!(commands.containsKey(inputs[0]))) {
-            System.out.println(commands.get(0));
+        if (!(commands.containsKey(inputs[0].toUpperCase()))) {
+            // System.out.println(commands.get(0));
             throw new IllegalArgumentException("Invalid command. Please try again");
         } else {
-            // * System.out.println("This is a valid command");
+            System.out.println("This is a valid command");
             // TODO: Add how to decide which command to use. Maybe use a switch statement?
             switch (commands.get(inputs[0])) {
                 case 0:
@@ -63,6 +63,16 @@ public class SimpleTerminal {
                     selectInstrument(inputs[1]);
                     break;
                 case 2:
+                    System.out.println("Buy format:"
+                            + "\nString iCode"
+                            + "\nString date"
+                            + "\nString transactionType"
+                            + "\ndouble cleanTransactionPrice"
+                            + "\ndouble dirtyTransactionPrice"
+                            + "\ndouble transactionAmount"
+                            + "\nString settlementDate"
+                            + "\ndouble totalSettlementAmount");
+                    // * Buy
 
                     // * Check if the number of parameters is correct, BUY + 8 other parameters for
                     // * the Transaction object
@@ -75,11 +85,13 @@ public class SimpleTerminal {
                     double dirtyTransactionPrice = Double.parseDouble(inputs[5]);
                     double transactionAmount = Double.parseDouble(inputs[6]);
                     double totalSettlementAmount = Double.parseDouble(inputs[8]);
-                    addTransaction(inputs[1], inputs[2], "SELL", cleanTransactionPrice, dirtyTransactionPrice,
+                    addTransaction(inputs[1], inputs[2], "BUY", cleanTransactionPrice, dirtyTransactionPrice,
                             transactionAmount, inputs[7],
                             totalSettlementAmount);
                     break;
                 case 3:
+                    // * Sell
+
                     // * Converting some elements in String to doubles to pass into the
                     // * addTransaction function
                     double cleanTransactionPrice1 = Double.parseDouble(inputs[4]);

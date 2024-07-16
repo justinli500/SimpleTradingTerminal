@@ -4,9 +4,9 @@ import com.opencsv.bean.CsvBindByName;
 
 public class Transaction {
     private String iCode;
-    @CsvBindByName("TRADE_DATE")
+    // @CsvBindByName("TRADE_DATE")
     private String date;
-    @csvBindByID // - This is for reading into beans
+    // @csvBindByID // - This is for reading into beans
     private String transactionType;
     private double cleanTransactionPrice;
     private double dirtyTransactionPrice;
