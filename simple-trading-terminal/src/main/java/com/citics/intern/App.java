@@ -13,16 +13,6 @@ import java.nio.file.Paths;
  */
 public class App {
     public static void main(String[] args) {
-
-        // Date date = new Date(10, 10, 10);
-        // System.out.println(date);
-
-        // Scanner scanner = new Scanner(System.in);
-        // System.out.println("Please input your command:");
-        // String input = scanner.nextLine();
-
-        // SimpleTerminal.command(input);
-
         /*
          * - How to get relative path
          * Path filePath1 = Paths.
@@ -38,16 +28,44 @@ public class App {
          */
         // List<Instrument> instruments = SimpleTerminal
         // .loadInstruments("../../../../../../../债券信息1.csv");
+        // * Testing the different functions below here
+        // SimpleTerminal terminal = new SimpleTerminal();
+        // terminal.loadInstruments("./债券信息1.csv");
+        // terminal.selectInstrument("XS2858459634");
+        // System.out.println(terminal.getInstrument());
 
-        SimpleTerminal terminal = new SimpleTerminal();
-        terminal.loadInstruments("./债券信息1.csv");
-        terminal.selectInstrument("XS2858459634");
-        System.out.println(terminal.getInstrument());
+        // terminal.addTransaction("iCode", "date", "buy", 123,
+        // 123,
+        // 123, "settlementDate", 123);
+        // terminal.writeTransactions();
 
-        terminal.addTransaction("iCode", "date", "buy", 123,
-                123,
-                123, "settlementDate", 123);
-        terminal.writeTransactions();
+        int counter = 0;
+        Scanner scanner = new Scanner(System.in);
+        SimpleTerminal user = new SimpleTerminal();
+        while (true) {
+
+            // TODO: Setup making a terminal object and getting input from the user here
+
+            // String command = scanner.getfrominput
+            try {
+                // * Reprint available commands every 10 commands so that they are visible again
+                if (counter % 10 == 0) {
+                    System.out.println("\nList of possible commands:" +
+                            "\nLOAD INSTRUMENTS xxxx.csv" +
+                            "\nSELECT INSTRUMENT xxxx" +
+                            "\nBUY (xxxx.csv) or SELL (xxxx.csv)\n");
+                }
+
+                System.out.println("Please enter your command:");
+                String command = scanner.nextLine();
+                user.command(command);
+            } catch (Exception e) {
+                System.out.println(
+                        "Exception reached. Invalid command or file name or parameter, or certain attributes haven't been setup yet.");
+                // TODO: handle exception
+            }
+            counter++;
+        }
 
         // System.out.println(instruments.get(0));
 

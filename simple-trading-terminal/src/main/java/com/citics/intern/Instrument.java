@@ -1,7 +1,10 @@
 package com.citics.intern;
 
+import com.opencsv.bean.CsvBindByName;
+
 public class Instrument {
     // - I don't think the directory for the instrument is necessary
+
     private String iCode;
     private String assetType;
     private String marketType;

@@ -1,10 +1,14 @@
 package com.citics.intern;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.ArrayList;
 import java.util.List;
 import com.opencsv.CSVReader;
+import com.opencsv.bean.CsvBindByName;
+
 import java.io.FileReader;
 
 import java.io.FileWriter;
@@ -20,9 +24,12 @@ import java.io.BufferedWriter;
 
 public class SimpleTerminal {
     private static Map<String, Integer> commands = new HashMap<>();
+    // Map<String, Function<>> map = new HashMap<>();
+    // FunctionInetrface // - This is how to choose which command to use
     private String fileReadFrom;
     private String fileWriteTo;
     private Instrument instrument;
+    private Map<String, Instrument> instrumentMap = new HashMap<>(); // - This is for finding the instrument by iCode
     private List<Instrument> instruments = new ArrayList<>();
     private List<Transaction> transactions = new ArrayList<>();
 
@@ -40,16 +47,60 @@ public class SimpleTerminal {
     // - Maybe use an ArrayList to store the instruments
     // - Can use a Refresh method to refresh on the directory
 
-    public static void command(String input) throws IllegalArgumentException {
+    public void command(String input) throws IllegalArgumentException {
         String[] inputs = input.split(" ");
         if (!(commands.containsKey(inputs[0]))) {
             System.out.println(commands.get(0));
             throw new IllegalArgumentException("Invalid command. Please try again");
         } else {
-            System.out.println("This is a valid command");
-            // switch ow
+            // * System.out.println("This is a valid command");
             // TODO: Add how to decide which command to use. Maybe use a switch statement?
-            System.out.println("HI");
+            switch (commands.get(inputs[0])) {
+                case 0:
+                    loadInstruments(inputs[1]);
+                    break;
+                case 1:
+                    selectInstrument(inputs[1]);
+                    break;
+                case 2:
+
+                    // * Check if the number of parameters is correct, BUY + 8 other parameters for
+                    // * the Transaction object
+                    if (inputs.length != 9) {
+                        throw new IllegalArgumentException("Incorrect amount of parameters");
+                    }
+                    // * Converting some elements in String to doubles to pass into the
+                    // * addTransaction function
+                    double cleanTransactionPrice = Double.parseDouble(inputs[4]);
+                    double dirtyTransactionPrice = Double.parseDouble(inputs[5]);
+                    double transactionAmount = Double.parseDouble(inputs[6]);
+                    double totalSettlementAmount = Double.parseDouble(inputs[8]);
+                    addTransaction(inputs[1], inputs[2], "SELL", cleanTransactionPrice, dirtyTransactionPrice,
+                            transactionAmount, inputs[7],
+                            totalSettlementAmount);
+                    break;
+                case 3:
+                    // * Converting some elements in String to doubles to pass into the
+                    // * addTransaction function
+                    double cleanTransactionPrice1 = Double.parseDouble(inputs[4]);
+                    double dirtyTransactionPrice1 = Double.parseDouble(inputs[5]);
+                    double transactionAmount1 = Double.parseDouble(inputs[6]);
+                    double totalSettlementAmount1 = Double.parseDouble(inputs[8]);
+                    addTransaction(inputs[1], inputs[2], "SELL", cleanTransactionPrice1, dirtyTransactionPrice1,
+                            transactionAmount1, inputs[7],
+                            totalSettlementAmount1);
+                    break;
+
+                case 4:
+                    if (inputs.length == 2) {
+                        setFileWriteTo(inputs[1]);
+                    }
+                    writeTransactions();
+                    break;
+
+                default:
+                    throw new IllegalArgumentException("Default switch expression reached");
+            }
         }
 
     }
@@ -108,6 +159,7 @@ public class SimpleTerminal {
             throw new IllegalStateException("Instruments not loaded yet");
 
         }
+        instrument = instrumentMap.get(iCode);
         for (int i = 0; i < instruments.size(); i++) {
             if (instruments.get(i).getICode().equalsIgnoreCase(iCode)) {
                 instrument = instruments.get(i);
@@ -175,7 +227,7 @@ public class SimpleTerminal {
                         + "\"" + curr.getTransactionAmount() + "\","
                         + "\"" + curr.getSettlementDate() + "\","
                         + "\"" + curr.getTotalSettlementAmount() + "\""
-
+                // TODO: Don't overwrite each time
                 );
             }
 
@@ -183,6 +235,14 @@ public class SimpleTerminal {
         } catch (Exception e) {
 
         }
+
+    }
+
+    private void queryTransaction(String filenName) {
+
+    }
+
+    private void queryTransaction(String fileName, String identifier) {
 
     }
 }
