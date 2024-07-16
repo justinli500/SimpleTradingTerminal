@@ -7,7 +7,10 @@ import java.util.Set;
 import java.util.ArrayList;
 import java.util.List;
 import com.opencsv.CSVReader;
+import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvBindByName;
+import com.opencsv.bean.CsvToBeanBuilder;
+import java.io.Reader;
 
 import java.io.FileReader;
 
@@ -16,6 +19,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.BufferOverflowException;
 import java.io.File;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 
 // import java.util.List;
@@ -112,39 +116,18 @@ public class SimpleTerminal {
         // System.out.println("1111");
 
         try {
-            // - Read the CSV file line by line and store each line into an array
-            FileReader fileReader = new FileReader(file);
+            // * Use OpenCSV to read into Java beans
             // CSVReader csvReader = new CSVReader(fileReader, ',', '"', 1);
-            CSVReader csvReader = new CSVReader(fileReader);
-            csvReader.skip(1); // - Skip the first line with the headers
+            // FileReader fileReader = new FileReader(file);
+            // Reader reader = new BufferedReader(fileReader);
+            Reader reader = new FileReader(fileReadFrom);
+            CsvToBean<Instrument> csvReader = new CsvToBeanBuilder<Instrument>(reader).withType(Instrument.class)
+                    .withSeparator(',').withIgnoreLeadingWhiteSpace(true).withSkipLines(1).withIgnoreEmptyLine(true)
+                    .build();
 
-            String[] nextLine = null;
-            while (((nextLine = csvReader.readNext()) != null)) {
-                // - Remove the " at the end of each entry
-                for (int i = 0; i < nextLine.length; i++) {
-                    nextLine[i] = nextLine[i].replace("\"", "");
-                    nextLine[i] = nextLine[i].trim();
-                    // System.out.println(nextLine[i]);
-                }
-                /*
-                 * Format of the nextLine array:
-                 * - index 0 = I_CODE,
-                 * - index 1 = A_TYPE
-                 * - index 2 = M_TYPE
-                 * - index 3 = NAME
-                 * - index 4 = COUPON
-                 * - index 5 = ISSUER
-                 * - index 6 = DATE_ISSUED
-                 * - index 7 = DATE_MATURED
-                 * - index 8 = FACE_VALUE
-                 * - index 9 = INTEREST_RULE
-                 */
-                // - Initialize each Instrument object and add them to the ArrayList
-                Instrument curr = new Instrument(nextLine[0], nextLine[1], nextLine[2], nextLine[3], nextLine[4],
-                        nextLine[5], nextLine[6], nextLine[7], nextLine[8], nextLine[9]);
-                returner.add(curr);
-                // System.out.println(curr);
-            }
+            // csvReader.skip(1); // - Skip the first line with the headers
+            List<Instrument> list = csvReader.parse();
+            instruments = list;
 
         } catch (Exception e) {
             throw new IllegalArgumentException("Invalid file");
