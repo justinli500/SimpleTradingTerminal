@@ -26,7 +26,7 @@ public class SimpleTerminal {
     private static Map<String, Integer> commands = new HashMap<>();
     // Map<String, Function<>> map = new HashMap<>();
     // FunctionInetrface // - This is how to choose which command to use
-    private String fileReadFrom;
+    private String fileReadFrom; // - Incorporate this somehow
     private String fileWriteTo;
     private Instrument instrument;
     private Map<String, Instrument> instrumentMap = new HashMap<>(); // - This is for finding the instrument by iCode

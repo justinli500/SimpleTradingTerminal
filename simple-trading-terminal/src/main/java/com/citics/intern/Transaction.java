@@ -3,8 +3,8 @@ package com.citics.intern;
 import com.opencsv.bean.CsvBindByName;
 
 public class Transaction {
+    @CsvBindByName(column = "I_CODE")
     private String iCode;
-    @CsvBindByName("TRADE_DATE")
     private String date;
     @csvBindByID // - This is for reading into beans
     private String transactionType;
