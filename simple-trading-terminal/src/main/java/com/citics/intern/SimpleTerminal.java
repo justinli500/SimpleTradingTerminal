@@ -36,6 +36,7 @@ public class SimpleTerminal {
     private Map<String, Instrument> instrumentsMap = new HashMap<>(); // - This is for finding the instrument by iCode
     private List<Instrument> instruments = new ArrayList<>();
     private List<Transaction> transactions = new ArrayList<>();
+    private boolean firstWrite = true;
 
     // TODO: Handle checking LOAD INSTRUMENTS, or just have the user enter
     // TODO: Let the user select a set of instruments, select instrument, and then
@@ -58,7 +59,6 @@ public class SimpleTerminal {
             throw new IllegalArgumentException("Invalid command. Please try again");
         } else {
             // * System.out.println("This is a valid command");
-            // TODO: Add how to decide which command to use. Maybe use a switch statement?
             switch (commands.get(inputs[0])) {
                 case 0:
                     loadInstruments(inputs[1]);
@@ -209,13 +209,16 @@ public class SimpleTerminal {
 
         // File file = new File(fileWriteTo);
         try {
-            boolean append = true;
-            if (fileWriteTo == null) {
+            if (firstWrite) {
+                firstWrite = false;
+            }
+            // * Will append firstWrite is false, and overwrite if firstWrite is true
+            if (fileWriteTo == null || firstWrite) {
                 fileWriteTo = "transactions.csv";
-                append = false;
+                firstWrite = false;
                 // System.out.println("false");
             }
-            FileWriter fw = new FileWriter(fileWriteTo, append);
+            FileWriter fw = new FileWriter(fileWriteTo, !firstWrite);
             BufferedWriter bw = new BufferedWriter(fw);
             PrintWriter out = new PrintWriter(bw);
             out.println(
@@ -232,6 +235,7 @@ public class SimpleTerminal {
                 // TODO: Don't overwrite each time
                 );
             }
+            transactions.clear();
 
             out.close(); // - It's necessary to close this stream or something
         } catch (Exception e) {
@@ -248,6 +252,3 @@ public class SimpleTerminal {
 
     }
 }
-
-// TODO: Decide how you're going to interact with the user and where to decide
-// TODO: which command to execute.
