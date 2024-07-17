@@ -33,7 +33,7 @@ public class SimpleTerminal {
     private String fileReadFrom; // - Incorporate this somehow
     private String fileWriteTo;
     private Instrument instrument;
-    private Map<String, Instrument> instrumentMap = new HashMap<>(); // - This is for finding the instrument by iCode
+    private Map<String, Instrument> instrumentsMap = new HashMap<>(); // - This is for finding the instrument by iCode
     private List<Instrument> instruments = new ArrayList<>();
     private List<Transaction> transactions = new ArrayList<>();
 
@@ -112,7 +112,7 @@ public class SimpleTerminal {
     public void loadInstruments(String file) {
         fileReadFrom = file;
 
-        List<Instrument> returner = new ArrayList<>();
+        // List<Instrument> returner = new ArrayList<>();
         // System.out.println("1111");
 
         try {
@@ -121,42 +121,61 @@ public class SimpleTerminal {
             // FileReader fileReader = new FileReader(file);
             // Reader reader = new BufferedReader(fileReader);
             Reader reader = new FileReader(fileReadFrom);
-            CsvToBean<Instrument> csvReader = new CsvToBeanBuilder<Instrument>(reader).withType(Instrument.class)
-                    .withSeparator(',').withIgnoreLeadingWhiteSpace(true).withSkipLines(1).withIgnoreEmptyLine(true)
+            // CsvToBean<Instrument> csvReader = new
+            // CsvToBeanBuilder<Instrument>(reader).withType(Instrument.class)
+            // .withSeparator(',').withIgnoreLeadingWhiteSpace(true).withSkipLines(1).withIgnoreEmptyLine(true)
+            // .build();
+
+            // CsvToBean<Instrument> csvReader = new
+            // CsvToBeanBuilder<Instrument>(reader).withType(Instrument.class)
+            // .withSeparator(',').withIgnoreLeadingWhiteSpace(true).withIgnoreEmptyLine(true).withSkipLines(1)
+            // .build();
+
+            CsvToBean<Instrument> csvReader = new CsvToBeanBuilder<Instrument>(reader)
+                    .withType(Instrument.class)
+                    .withSeparator(',')
+                    .withIgnoreLeadingWhiteSpace(true)
+                    .withIgnoreEmptyLine(true)
+                    .withSkipLines(1)
                     .build();
 
             // csvReader.skip(1); // - Skip the first line with the headers
             List<Instrument> list = csvReader.parse();
-            instruments = list;
+            for (Instrument curr : list) {
+                System.out.println(curr);
+            }
+            // System.out.println(list.get(1));
 
+            // instruments = list;
+            // instruments = new ArrayList<>(list);
+            instruments.addAll(list);
+            // * Load instruments into a map
+            for (int i = 0; i < instruments.size(); i++) {
+                instrumentsMap.put(instruments.get(i).getICode(), instruments.get(i));
+            }
         } catch (Exception e) {
             throw new IllegalArgumentException("Invalid file");
         }
 
-        instruments = returner;
-
+        // instruments = returner; // - This line was resetting the list of instruments
     }
 
     public void selectInstrument(String iCode) {
         if (instruments == null) {
             throw new IllegalStateException("Instruments not loaded yet");
-
         }
-        instrument = instrumentMap.get(iCode);
-        for (int i = 0; i < instruments.size(); i++) {
-            if (instruments.get(i).getICode().equalsIgnoreCase(iCode)) {
-                instrument = instruments.get(i);
-                // return instrument;
-                return;
-            }
+        // for (int i = 0; i < instruments.size(); i++) {
+        // System.out.println(instruments.get(i));
+        // }
+        if (instrumentsMap.get(iCode) == null) {
+            throw new IllegalArgumentException("Instrument not found");
         }
-        throw new IllegalArgumentException("Instrument not found");
+        instrument = instrumentsMap.get(iCode);
     }
 
     public Instrument getInstrument() {
         return instrument;
     }
-    // TODO: Write to file - writing a
 
     public void setFileWriteTo(String file) {
         fileWriteTo = file;
