@@ -1,30 +1,18 @@
 package com.citics.intern;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.ArrayList;
 import java.util.List;
-import com.opencsv.CSVReader;
 import com.opencsv.bean.CsvToBean;
-import com.opencsv.bean.CsvBindByName;
 import com.opencsv.bean.CsvToBeanBuilder;
 import java.io.Reader;
 
 import java.io.FileReader;
 
 import java.io.FileWriter;
-import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.BufferOverflowException;
-import java.io.File;
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
-
-// import java.util.List;
-
-// import list;
 
 public class SimpleTerminal {
     private static Map<String, Integer> commands = new HashMap<>();
@@ -32,9 +20,8 @@ public class SimpleTerminal {
     // FunctionInetrface // - This is how to choose which command to use
     private String fileReadFrom; // - Incorporate this somehow
     private String fileWriteTo;
-    private Instrument instrument;
+    private Instrument currentInstrument;
     private Map<String, Instrument> instrumentsMap = new HashMap<>(); // - This is for finding the instrument by iCode
-    private List<Instrument> instruments = new ArrayList<>();
     private List<Transaction> transactions = new ArrayList<>();
     private boolean firstWrite = true;
 
@@ -142,17 +129,9 @@ public class SimpleTerminal {
 
             // csvReader.skip(1); // - Skip the first line with the headers
             List<Instrument> list = csvReader.parse();
-            for (Instrument curr : list) {
-                // System.out.println(curr);
-            }
-            // System.out.println(list.get(1));
-
-            // instruments = list;
-            // instruments = new ArrayList<>(list);
-            instruments.addAll(list);
             // * Load instruments into a map
-            for (int i = 0; i < instruments.size(); i++) {
-                instrumentsMap.put(instruments.get(i).getICode(), instruments.get(i));
+            for (int i = 0; i < list.size(); i++) {
+                instrumentsMap.put(list.get(i).getICode(), list.get(i));
             }
         } catch (Exception e) {
             throw new IllegalArgumentException("Invalid file");
@@ -162,20 +141,18 @@ public class SimpleTerminal {
     }
 
     public void selectInstrument(String iCode) {
-        if (instruments == null) {
-            throw new IllegalStateException("Instruments not loaded yet");
+        if (instrumentsMap == null || instrumentsMap.size() == 0) {
+            throw new IllegalArgumentException("Instrument not loaded");
         }
-        // for (int i = 0; i < instruments.size(); i++) {
-        // System.out.println(instruments.get(i));
-        // }
-        if (instrumentsMap.get(iCode) == null) {
+        if (instrumentsMap.containsKey(iCode)) {
             throw new IllegalArgumentException("Instrument not found");
+        } else {
+            this.currentInstrument = instrumentsMap.get(iCode);
         }
-        instrument = instrumentsMap.get(iCode);
     }
 
-    public Instrument getInstrument() {
-        return instrument;
+    public Instrument getCurrentInstrument() {
+        return currentInstrument;
     }
 
     public void setFileWriteTo(String file) {
@@ -187,7 +164,7 @@ public class SimpleTerminal {
     public void addTransaction(String iCode, String date, String transactionType, double cleanTransactionPrice,
             double dirtyTransactionPrice, double transactionAmount,
             String settlementDate, double settlementAmount) {
-        if (instrument == null) {
+        if (currentInstrument == null) {
             throw new IllegalStateException("No instrument selected yet");
         }
         // assert (buyOrSell.equalsIgnoreCase("buy")) ||

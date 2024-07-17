@@ -33,7 +33,7 @@ public class App {
         SimpleTerminal terminal = new SimpleTerminal();
         terminal.loadInstruments("./债券信息1.csv");
         terminal.selectInstrument("BBG00R953ZY1");
-        System.out.println(terminal.getInstrument());
+        System.out.println(terminal.getCurrentInstrument());
 
         // terminal.addTransaction("iCode", "date", "buy", 123,
         // 123,
