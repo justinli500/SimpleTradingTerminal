@@ -144,7 +144,7 @@ public class SimpleTerminal {
         if (instrumentsMap == null || instrumentsMap.size() == 0) {
             throw new IllegalArgumentException("Instrument not loaded");
         }
-        if (instrumentsMap.containsKey(iCode)) {
+        if (!instrumentsMap.containsKey(iCode)) {
             throw new IllegalArgumentException("Instrument not found");
         } else {
             this.currentInstrument = instrumentsMap.get(iCode);
