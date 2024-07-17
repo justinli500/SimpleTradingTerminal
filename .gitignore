@@ -1,1 +1,5 @@
 *.class
+
+.vscode/
+simple-trading-terminal/target/
+simple-trading-terminal/.vscode/
