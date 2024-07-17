@@ -4,26 +4,26 @@ import com.opencsv.bean.CsvBindByName;
 
 public class Instrument {
     // - I don't think the directory for the instrument is necessary
-    @CsvBindByName(column = "\"I_CODE\"")
+    @CsvBindByName(column = "I_CODE")
     private String iCode;
-    @CsvBindByName(column = "\"A_TYPE\"")
+    @CsvBindByName(column = "A_TYPE")
     private String assetType;
-    @CsvBindByName(column = "\"M_TYPE\"")
+    @CsvBindByName(column = "M_TYPE")
     private String marketType;
-    @CsvBindByName(column = "\"B_NAME\"")
+    @CsvBindByName(column = "B_NAME")
     private String name;
-    @CsvBindByName(column = "\"B_COUPON\"")
+    @CsvBindByName(column = "B_COUPON")
     private String coupon;
-    @CsvBindByName(column = "\"B_ISSUER\"")
+    @CsvBindByName(column = "B_ISSUER")
     private String issuer;
-    @CsvBindByName(column = "\"B_ISSUE_DATE\"")
+    @CsvBindByName(column = "B_ISSUE_DATE")
     private String dateIssued; // - I don't think a new Date class needs to be used in the Instrument class.
                                // - It might be useful in the Transaction class though. Not sure.
-    @CsvBindByName(column = "\"B_MTR_DATE\"")
+    @CsvBindByName(column = "B_MTR_DATE")
     private String dateMatured;
-    @CsvBindByName(column = "\"B_PAR_VALUE\"")
+    @CsvBindByName(column = "B_PAR_VALUE")
     private String faceValue;
-    @CsvBindByName(column = "\"B_DAYCOUNT\"")
+    @CsvBindByName(column = "B_DAYCOUNT")
     private String interestRule;
 
     public Instrument() {

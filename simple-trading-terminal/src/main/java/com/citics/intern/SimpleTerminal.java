@@ -136,13 +136,14 @@ public class SimpleTerminal {
                     .withSeparator(',')
                     .withIgnoreLeadingWhiteSpace(true)
                     .withIgnoreEmptyLine(true)
-                    .withSkipLines(1)
+                    .withIgnoreQuotations(true)
+                    // .withSkipLines(1)
                     .build();
 
             // csvReader.skip(1); // - Skip the first line with the headers
             List<Instrument> list = csvReader.parse();
             for (Instrument curr : list) {
-                System.out.println(curr);
+                // System.out.println(curr);
             }
             // System.out.println(list.get(1));
 
