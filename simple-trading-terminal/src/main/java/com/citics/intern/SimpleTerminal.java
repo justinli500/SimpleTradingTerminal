@@ -7,6 +7,10 @@ import java.util.List;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import java.io.Reader;
+import com.opencsv.bean.StatefulBeanToCsv;
+import com.opencsv.bean.StatefulBeanToCsvBuilder;
+import com.opencsv.exceptions.CsvDataTypeMismatchException;
+import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 
 import java.io.FileReader;
 
@@ -182,41 +186,49 @@ public class SimpleTerminal {
         transactions.add(curr);
     }
 
+    public void printAllTransactions() {
+        for (Transaction curr : transactions) {
+            System.out.println(curr);
+        }
+    }
+
     public void writeTransactions() {
         // - Write the CSV headers
+        // TODO: Throw an exception if there are no transactions to be written?
 
         // File file = new File(fileWriteTo);
         try {
+
+            // * Will append firstWrite is false, and overwrite if firstWrite is true
+            if (fileWriteTo == null) {
+                fileWriteTo = "transactions.csv";
+                // System.out.println("false");
+            }
+            // - Maybe don't firstWrite until after writing. But for now there is another
+            // - bug
+            FileWriter fileWriter = new FileWriter(fileWriteTo, !firstWrite);
+            // BufferedWriter bw = new BufferedWriter(fw);
+            // PrintWriter out = new PrintWriter(bw);
+            StatefulBeanToCsv<Transaction> beanToCsv = new StatefulBeanToCsvBuilder<Transaction>(fileWriter)
+                    .withApplyQuotesToAll(true).build();
+            beanToCsv.write(transactions);
+
+            // beanToCsv.write(new Transaction("iCode", "date", "buy", 123,
+            // 123,
+            // 123, "settlementDate", 123));
+            if (!firstWrite) {
+                System.out.println("File appended successfully");
+            } else {
+                System.out.println("File created/overwritten successfully");
+            }
+            transactions.clear();
             if (firstWrite) {
                 firstWrite = false;
             }
-            // * Will append firstWrite is false, and overwrite if firstWrite is true
-            if (fileWriteTo == null || firstWrite) {
-                fileWriteTo = "transactions.csv";
-                firstWrite = false;
-                // System.out.println("false");
-            }
-            FileWriter fw = new FileWriter(fileWriteTo, !firstWrite);
-            BufferedWriter bw = new BufferedWriter(fw);
-            PrintWriter out = new PrintWriter(bw);
-            out.println(
-                    "\"TRADE_DATE\",\"TRANSACTION_TYPE\",\"CLEAN_TRANSACTION_PRICE\",\"DIRTY_TRANSACTION_PRICE\",\"TRANSACTION_AMOUNT\",\"SETTLEMENT_DATE\",\"TOTAL_SETTLEMENT_AMOUNT\"");
-            for (int i = 0; i < transactions.size(); i++) {
-                Transaction curr = transactions.get(i);
-                out.println("\"" + curr.getDate() + "\","
-                        + "\"" + curr.getTransactionType() + "\","
-                        + "\"" + curr.getCleanTransactionPrice() + "\","
-                        + "\"" + curr.getDirtyTransactionPrice() + "\","
-                        + "\"" + curr.getTransactionAmount() + "\","
-                        + "\"" + curr.getSettlementDate() + "\","
-                        + "\"" + curr.getTotalSettlementAmount() + "\""
-                // TODO: Don't overwrite each time
-                );
-            }
-            transactions.clear();
 
-            out.close(); // - It's necessary to close this stream or something
+            // out.close(); // - It's necessary to close this stream or something
         } catch (Exception e) {
+            System.out.println("File failed, reason: \n" + e);
 
         }
 

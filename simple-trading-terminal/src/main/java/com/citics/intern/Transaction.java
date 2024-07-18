@@ -3,16 +3,26 @@ package com.citics.intern;
 import com.opencsv.bean.CsvBindByName;
 
 public class Transaction {
-    // @CsvBindByName(column = "I_CODE")
+    @CsvBindByName(column = "I_CODE")
     private String iCode;
+    @CsvBindByName(column = "TRADE_DATE")
     private String date;
     // @csvBindByID // - This is for reading into beans
+    @CsvBindByName(column = "TRANSACTION_TYPE")
     private String transactionType;
+    @CsvBindByName(column = "CLEAN_TRANSACTION_PRICE")
     private double cleanTransactionPrice;
+    @CsvBindByName(column = "DIRTY_TRANSACTION_PRICE")
     private double dirtyTransactionPrice;
+    @CsvBindByName(column = "TRANSACTION_AMOUNT")
     private double transactionAmount;
+    @CsvBindByName(column = "SETTLEMENT_DATE")
     private String settlementDate;
+    @CsvBindByName(column = "TOTAL_SETTLEMENT_AMOUNT")
     private double totalSettlementAmount;
+
+    public Transaction() {
+    }
 
     public Transaction(String iCode, String date, String transactionType, double cleanTransactionPrice,
             double dirtyTransactionPrice,
@@ -57,6 +67,14 @@ public class Transaction {
 
     public double getTotalSettlementAmount() {
         return totalSettlementAmount;
+    }
+
+    @Override
+    public String toString() {
+        return "Transaction [iCode=" + iCode + ", date=" + date + ", transactionType=" + transactionType
+                + ", cleanTransactionPrice=" + cleanTransactionPrice + ", dirtyTransactionPrice="
+                + dirtyTransactionPrice + ", transactionAmount=" + transactionAmount + ", settlementDate="
+                + settlementDate + ", totalSettlementAmount=" + totalSettlementAmount + "]";
     }
 
 }

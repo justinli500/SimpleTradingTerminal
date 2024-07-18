@@ -35,10 +35,18 @@ public class App {
         terminal.selectInstrument("BBG00R953ZY1");
         System.out.println(terminal.getCurrentInstrument());
 
-        // terminal.addTransaction("iCode", "date", "buy", 123,
-        // 123,
-        // 123, "settlementDate", 123);
-        // terminal.writeTransactions();
+        terminal.addTransaction("iCode", "date", "buy", 123,
+                123,
+                123, "settlementDate", 123);
+        terminal.writeTransactions();
+        terminal.addTransaction("iCode", "date", "buy", 123,
+                123,
+                123, "settlementDate", 123);
+        terminal.printAllTransactions();
+        terminal.writeTransactions();
+
+        System.out.println("Second print");
+        terminal.printAllTransactions();
 
         // - Main app
         // int counter = 0;
