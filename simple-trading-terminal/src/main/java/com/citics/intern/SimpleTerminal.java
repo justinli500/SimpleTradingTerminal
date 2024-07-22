@@ -212,7 +212,7 @@ public class SimpleTerminal {
             StatefulBeanToCsv<Transaction> beanToCsv = new StatefulBeanToCsvBuilder<Transaction>(fileWriter)
                     .withApplyQuotesToAll(true).build();
             beanToCsv.write(transactions);
-
+            fileWriter.close();     // writer needs to be closed
             // beanToCsv.write(new Transaction("iCode", "date", "buy", 123,
             // 123,
             // 123, "settlementDate", 123));
