@@ -82,6 +82,9 @@ public class SimpleTerminal {
                     if (inputs.length != 9) {
                         throw new IllegalArgumentException("Incorrect amount of parameters");
                     }
+                    if (inputs[2].equalsIgnoreCase(inputs[7])) {
+                        throw new IllegalArgumentException("The transation date is equal to the settlement date");
+                    }
                     // * Converting some elements in String to doubles to pass into the
                     // * addTransaction function
                     double cleanTransactionPrice = Double.parseDouble(inputs[4]);
@@ -109,6 +112,9 @@ public class SimpleTerminal {
                     }
                     if (inputs.length != 9) {
                         throw new IllegalArgumentException("Incorrect amount of parameters");
+                    }
+                    if (inputs[2].equalsIgnoreCase(inputs[7])) {
+                        throw new IllegalArgumentException("The transation date is equal to the settlement date");
                     }
                     // * Converting some elements in String to doubles to pass into the
                     // * addTransaction function

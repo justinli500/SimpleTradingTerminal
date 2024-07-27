@@ -20,6 +20,10 @@ public class Transaction {
     private String settlementDate;
     @CsvBindByName(column = "TOTAL_SETTLEMENT_AMOUNT")
     private double totalSettlementAmount;
+    @CsvBindByName(column = "TRANSACTION_IDENTIFIER")
+    private final int transactionIdentifier;
+
+    private static int currentTransactionIdentifier = 0;
 
     public Transaction() {
     }
@@ -35,6 +39,7 @@ public class Transaction {
         this.transactionAmount = transactionAmount;
         this.settlementDate = settlementDate;
         this.totalSettlementAmount = totalSettlementAmount;
+        transactionIdentifier = currentTransactionIdentifier++;
     }
 
     public String getICode() {
