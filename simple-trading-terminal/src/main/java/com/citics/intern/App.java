@@ -30,54 +30,86 @@ public class App {
         // .loadInstruments("../../../../../../../债券信息1.csv");
 
         // * Testing the different functions below here
-        SimpleTerminal terminal = new SimpleTerminal();
-        terminal.loadInstruments("./债券信息1.csv");
-        terminal.selectInstrument("BBG00R953ZY1");
-        System.out.println(terminal.getCurrentInstrument());
+        // SimpleTerminal terminal = new SimpleTerminal();
+        // terminal.loadInstruments("./债券信息1.csv");
+        // terminal.selectInstrument("BBG00R953ZY1");
+        // System.out.println(terminal.getCurrentInstrument());
 
-        terminal.addTransaction("iCode", "date", "buy", 123,
-                123,
-                123, "settlementDate", 123);
-        terminal.writeTransactions();
-        terminal.addTransaction("iCode", "date", "buy", 123,
-                123,
-                123, "settlementDate", 123);
-        terminal.printAllTransactions();
-        terminal.writeTransactions();
+        // terminal.addTransaction("iCode", "date", "buy", 123,
+        // 123,
+        // 123, "settlementDate", 123);
+        // terminal.writeTransactions();
+        // terminal.addTransaction("iCode", "date", "buy", 123,
+        // 123,
+        // 123, "settlementDate", 123);
+        // terminal.printAllTransactions();
+        // terminal.writeTransactions();
 
-        System.out.println("Second print");
-        terminal.printAllTransactions();
+        // System.out.println("Second print");
+        // terminal.printAllTransactions();
 
         // - Main app
-        // int counter = 0;
-        // Scanner scanner = new Scanner(System.in);
-        // SimpleTerminal user = new SimpleTerminal();
-        // while (true) {
+        int counter = 0;
+        // * Including this to wanr the user about the default file that the
+        // * transactions will be written to the first time addTransaction
+        // * is called
+        boolean warnedAboutSetFileWriteTo = false;
+        Scanner scanner = new Scanner(System.in);
+        SimpleTerminal user = new SimpleTerminal();
+        while (true) {
 
-        // // TODO: Setup making a terminal object and getting input from the user here
+            // String command = scanner.getfrominput
 
-        // // String command = scanner.getfrominput
-        // try {
-        // // * Reprint available commands every 10 commands so that they are visible
-        // again
-        // if (counter % 10 == 0) {
-        // System.out.println("\nList of possible commands:" +
-        // "\nLOAD INSTRUMENTS xxxx.csv" +
-        // "\nSELECT INSTRUMENT xxxx" +
-        // "\nBUY (xxxx.csv) or SELL (xxxx.csv)\n");
-        // }
+            // - For ease of testing:
+            // - File path: ./债券信息1.csv
+            // - Example instrument iCode: BBG00R953ZY1
+            // - load_instruments ./债券信息1.csv
+            // - select_instrument BBG00R953ZY1
+            // - buy iCode date BUY 123 123 123 settlementDate 123
+            // - sell iCode date SELL 123 123 123 settlementDate 123
+            // - write_transactions
 
-        // System.out.println("Please enter your command:");
-        // String command = scanner.nextLine();
-        // user.command(command);
-        // } catch (Exception e) {
-        // System.out.println(
-        // "Exception reached. Invalid command or file name or parameter, or certain
-        // attributes haven't been setup yet.");
-        // // TODO: handle exception
-        // }
-        // counter++;
-        // }
+            try {
+                // * Reprint available commands every 10 commands so that they are visible
+                // * again
+                if (counter % 10 == 0) {
+                    System.out.println("\nList of possible commands (case insensitive):" +
+                            "\nLOAD INSTRUMENTS xxxx.csv" +
+                            "\nSELECT INSTRUMENT xxxx" +
+                            "\nBUY (xxxx.csv) or SELL (xxxx.csv). Enter BUY or SELL for the format of the parameters\n"
+                            +
+                            "\nCURRENT_INSTRUMENT");
+                }
+                if (counter == 0) {
+                    System.out.println("Please enter your command:");
+                    String command = scanner.nextLine();
+                    user.command(command);
+                    System.out.println("\nValid command");
+                    counter++;
+                    continue;
+                }
+                System.out.println("\nPlease enter your command:");
+                String command = scanner.nextLine();
+                user.command(command);
+                if ((command.toLowerCase().contains("buy") || command.toLowerCase().contains("sell"))
+                        && (!warnedAboutSetFileWriteTo)) {
+                    System.out.println(
+                            "\nBy default, writeTransactions() will write the transactions " +
+                                    "to a file called \"transactions.csv\"." +
+                                    "Please provide a CSV file name after WRITE_TRANSACTIONS _____ " +
+                                    "if you would like to write to a custom file.");
+                    warnedAboutSetFileWriteTo = true;
+                }
+                System.out.println("\nValid command");
+            } catch (Exception e) {
+                // System.out.println(
+                // "Exception reached. Invalid command or file name or parameter, or certain
+                // attributes haven't been setup yet.");
+                System.out.println(e);
+                // TODO: handle exception
+            }
+            counter++;
+        }
         // - Main app
 
         // System.out.println(instruments.get(0));

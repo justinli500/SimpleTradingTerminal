@@ -34,23 +34,26 @@ public class SimpleTerminal {
     // TODO: keep track of all the transactions with ArrayLists.
 
     static {
-        commands.put("LOAD_INSTRUMENTS", 0);
-        commands.put("SELECT_INSTRUMENT", 1);
-        commands.put("BUY", 2);
-        commands.put("SELL", 3);
-        commands.put("QUERY", 4);
+        // * All lower case so that there aren't any case issues
+        commands.put("load_instruments", 0);
+        commands.put("select_instrument", 1);
+        commands.put("buy", 2);
+        commands.put("sell", 3);
+        // commands.put("query", 4);
+        commands.put("current_instrument", 4);
+        commands.put("write_transactions", 5);
     }
     // - Maybe use an ArrayList to store the instruments
     // - Can use a Refresh method to refresh on the directory
 
     public void command(String input) throws IllegalArgumentException {
         String[] inputs = input.split(" ");
-        if (!(commands.containsKey(inputs[0]))) {
+        if (!(commands.containsKey(inputs[0].toLowerCase()))) {
             System.out.println(commands.get(0));
             throw new IllegalArgumentException("Invalid command. Please try again");
         } else {
             // * System.out.println("This is a valid command");
-            switch (commands.get(inputs[0])) {
+            switch (commands.get(inputs[0].toLowerCase())) {
                 case 0:
                     loadInstruments(inputs[1]);
                     break;
@@ -61,6 +64,21 @@ public class SimpleTerminal {
 
                     // * Check if the number of parameters is correct, BUY + 8 other parameters for
                     // * the Transaction object
+                    if (inputs.length == 1) {
+                        System.out.println("\nFormat of BUY parameters: "
+                                + "\nString iCode"
+                                + "\nString date"
+                                + "\nString transactionType (BUY/SELL)"
+                                + "\ndouble cleanTransactionPrice"
+                                + "\ndouble dirtyTransactionPrice"
+                                + "\ndouble transactionAmount"
+                                + "\nString settlementDate"
+                                + "\ndouble settlementAmount");
+                        break;
+
+                        // iCode, date, transactionType, cleanTransactionPrice, dirtyTransactionPrice,
+                        // transactionAmount, settlementDate, settlementAmount
+                    }
                     if (inputs.length != 9) {
                         throw new IllegalArgumentException("Incorrect amount of parameters");
                     }
@@ -70,11 +88,28 @@ public class SimpleTerminal {
                     double dirtyTransactionPrice = Double.parseDouble(inputs[5]);
                     double transactionAmount = Double.parseDouble(inputs[6]);
                     double totalSettlementAmount = Double.parseDouble(inputs[8]);
-                    addTransaction(inputs[1], inputs[2], "SELL", cleanTransactionPrice, dirtyTransactionPrice,
+                    addTransaction(inputs[1], inputs[2], "BUY", cleanTransactionPrice, dirtyTransactionPrice,
                             transactionAmount, inputs[7],
                             totalSettlementAmount);
+                    // - If transactionType == "SELL" then this creates an error, not sure why
                     break;
                 case 3:
+                    // * Checking if there are enough parameters
+                    if (inputs.length == 1) {
+                        System.out.println("Format of BUY parameters: "
+                                + "\nString iCode"
+                                + "\nString date"
+                                + "\nString transactionType (BUY/SELL)"
+                                + "\ndouble cleanTransactionPrice"
+                                + "\ndouble dirtyTransactionPrice"
+                                + "\ndouble transactionAmount"
+                                + "\nString settlementDate"
+                                + "\ndouble settlementAmount");
+                        break;
+                    }
+                    if (inputs.length != 9) {
+                        throw new IllegalArgumentException("Incorrect amount of parameters");
+                    }
                     // * Converting some elements in String to doubles to pass into the
                     // * addTransaction function
                     double cleanTransactionPrice1 = Double.parseDouble(inputs[4]);
@@ -87,12 +122,22 @@ public class SimpleTerminal {
                     break;
 
                 case 4:
+                    System.out.println(currentInstrument);
+                    break;
+
+                case 5:
                     if (inputs.length == 2) {
                         setFileWriteTo(inputs[1]);
+                    } else {
+                        // -
+
                     }
                     writeTransactions();
                     break;
 
+                // case 6:
+                // writeTransactions();
+                // break;
                 default:
                     throw new IllegalArgumentException("Default switch expression reached");
             }
@@ -175,7 +220,7 @@ public class SimpleTerminal {
         // (buyOrSell.equalsIgnoreCase("sell"))
         // : "Invalid transaction type";
 
-        if (!(transactionType.equalsIgnoreCase("buy")) || (transactionType.equalsIgnoreCase("sell"))) {
+        if (!(transactionType.equalsIgnoreCase("buy")) && !(transactionType.equalsIgnoreCase("sell"))) {
             throw new IllegalArgumentException("Invalid transaction type");
         }
         // - Probably include some assertion about the relationship between dirty and
@@ -212,7 +257,7 @@ public class SimpleTerminal {
             StatefulBeanToCsv<Transaction> beanToCsv = new StatefulBeanToCsvBuilder<Transaction>(fileWriter)
                     .withApplyQuotesToAll(true).build();
             beanToCsv.write(transactions);
-            fileWriter.close();     // writer needs to be closed
+            fileWriter.close(); // writer needs to be closed
             // beanToCsv.write(new Transaction("iCode", "date", "buy", 123,
             // 123,
             // 123, "settlementDate", 123));
