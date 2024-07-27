@@ -203,6 +203,7 @@ public class SimpleTerminal {
             throw new IllegalArgumentException("Instrument not found");
         } else {
             this.currentInstrument = instrumentsMap.get(iCode);
+            System.out.println("\nInstrument found:\n" + currentInstrument);
         }
     }
 
