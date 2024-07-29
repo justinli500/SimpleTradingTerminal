@@ -16,7 +16,10 @@ import java.io.FileReader;
 
 import java.io.FileWriter;
 import java.io.PrintWriter;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.StringWriter;
+import java.io.StringReader;
 
 public class SimpleTerminal {
     private static Map<String, Integer> commands = new HashMap<>();
@@ -245,37 +248,47 @@ public class SimpleTerminal {
     }
 
     public void writeTransactions() {
-        // - Write the CSV headers
         // TODO: Throw an exception if there are no transactions to be written?
 
-        // File file = new File(fileWriteTo);
         try {
 
             // * Will append firstWrite is false, and overwrite if firstWrite is true
             if (fileWriteTo == null) {
                 fileWriteTo = "transactions.csv";
-                // System.out.println("false");
             }
-            // - Maybe don't firstWrite until after writing. But for now there is another
-            // - bug
-            FileWriter fileWriter = new FileWriter(fileWriteTo, !firstWrite);
-            // BufferedWriter bw = new BufferedWriter(fw);
-            // PrintWriter out = new PrintWriter(bw);
-            StatefulBeanToCsv<Transaction> beanToCsv = new StatefulBeanToCsvBuilder<Transaction>(fileWriter)
-                    .withApplyQuotesToAll(true).build();
-            beanToCsv.write(transactions);
-            fileWriter.close(); // writer needs to be closed
-            // beanToCsv.write(new Transaction("iCode", "date", "buy", 123,
-            // 123,
-            // 123, "settlementDate", 123));
-            if (!firstWrite) {
-                System.out.println("File appended successfully");
-            } else {
-                System.out.println("File created/overwritten successfully");
-            }
-            transactions.clear();
             if (firstWrite) {
+                FileWriter fileWriter = new FileWriter(fileWriteTo, !firstWrite);
+                // BufferedWriter bw = new BufferedWriter(fw);
+                // PrintWriter out = new PrintWriter(bw);
+                StatefulBeanToCsv<Transaction> beanToCsv = new StatefulBeanToCsvBuilder<Transaction>(fileWriter)
+                        .withApplyQuotesToAll(true).build();
+                beanToCsv.write(transactions);
+                fileWriter.close(); // writer needs to be closed
+                if (!firstWrite) {
+                    System.out.println("File appended successfully");
+                } else {
+                    System.out.println("File created/overwritten successfully");
+                }
+                transactions.clear();
                 firstWrite = false;
+            } else {
+                StringWriter stringWriter = new StringWriter();
+                StatefulBeanToCsv<Transaction> beanToCsv = new StatefulBeanToCsvBuilder<Transaction>(stringWriter)
+                        .withApplyQuotesToAll(true).build();
+                beanToCsv.write(transactions);
+                String transacsString = stringWriter.toString();
+                BufferedReader reader = new BufferedReader(new StringReader(transacsString));
+                FileWriter writer = new FileWriter(fileWriteTo, true);
+                reader.readLine();
+                // reader.withSkipLines(3);
+                String line = reader.readLine();
+                System.out.println("LINE: \n" + line);
+                while (line != null) {
+                    writer.write(line + "\n");
+                    line = reader.readLine();
+                }
+                writer.close();
+
             }
 
             // out.close(); // - It's necessary to close this stream or something
