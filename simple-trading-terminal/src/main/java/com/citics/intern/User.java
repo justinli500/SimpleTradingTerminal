@@ -1,45 +1,28 @@
 package com.citics.intern;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.ArrayList;
-import java.util.List;
-
-import com.opencsv.bean.CsvBindByName;
-import com.opencsv.bean.CsvToBean;
-import com.opencsv.bean.CsvToBeanBuilder;
-import java.io.Reader;
-import com.opencsv.bean.StatefulBeanToCsv;
-import com.opencsv.bean.StatefulBeanToCsvBuilder;
-import com.opencsv.exceptions.CsvDataTypeMismatchException;
-import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
-
-import java.io.FileReader;
-
-import java.io.FileWriter;
-import java.io.PrintWriter;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.StringWriter;
-import java.io.StringReader;
-import java.lang.StringBuilder;
-
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class User {
     // @CsvBindByName("FIRST_NAME")
     private String fullName;
+    private String username;
     // @CsvBindByName("LAST_NAME")
     // private String lastName;
     private List<Book> books;
+    // private static
     // private static boolean firstWrite = true;
 
     private static FileWriter usersFile;
 
     public User(String fullName, String username, String password) {
         this.fullName = fullName;
-
+        this.username = username;
         // * Overwrite if it's the first time writing, append otherwise
         if (usersFile == null) {
             try {
@@ -77,18 +60,24 @@ public class User {
             // }
             // usersFile.
             // usersFile.write("asdsad");
-
             usersFile.write(username + ", " + hash + "\n");
             usersFile.close();
         } catch (Exception e) {
             System.out.println("Username and password write failed");
         }
-
     }
 
-    public Map<String, String> loadUsers(String filePath) {
-        Map<String, String> users = new HashMap<>();
-        return users;
+    public String getFullName() {
+        return fullName;
     }
+
+    public String getUsername() {
+        return username;
+    }
+
+    // public static Map<String, User> loadUsers(String filePath) {
+    // Map<String, User> users = new HashMap<>();
+    // return users;
+    // }
 
 }

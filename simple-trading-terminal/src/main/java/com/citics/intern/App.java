@@ -55,10 +55,15 @@ public class App {
 
         // - Testing out login system here
         // SimpleTerminal terminal = new SimpleTerminal();
-        User userA = new User("John Smith", "userA", "123asdishdidhs");
-        User userB = new User("John Doe", "userB", "asdlkasdjalksjdasdl");
-
+        // User userA = new User("John Smith", "userA", "123asdishdidhs");
+        // User userB = new User("John Doe", "userB", "asdlkasdjalksjdasdl");
         // - Testing out login system above
+
+        // - Testing out the book class here
+        // Book book = new Book("transactions.csv");
+        // book.printAllTransactions();
+
+        // - Testing out the book class above
 
         // - Main app
         // int counter = 0;

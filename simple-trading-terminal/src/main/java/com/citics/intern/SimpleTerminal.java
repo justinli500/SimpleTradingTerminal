@@ -29,7 +29,7 @@ public class SimpleTerminal {
     private String fileWriteTo;
     private Instrument currentInstrument;
     private Map<String, Instrument> instrumentsMap = new HashMap<>(); // - This is for finding the instrument by iCode
-    private List<Transaction> transactions = new ArrayList<>();
+    private List<Transaction> transactions = new ArrayList<>(); // ? Necessary to add a HashMap?
     private boolean firstWrite = true;
 
     // TODO: Handle checking LOAD INSTRUMENTS, or just have the user enter
@@ -336,7 +336,7 @@ public class SimpleTerminal {
 
             // csvReader.skip(1); // - Skip the first line with the headers
             List<Transaction> list = csvReader.parse();
-            // * Load instruments into a map
+            // * Load transactions into a list
             for (int i = 0; i < list.size(); i++) {
                 if (list.get(i).getTransactionIdentifier() == identifier) {
                     System.out.println(list.get(i));
@@ -347,4 +347,7 @@ public class SimpleTerminal {
             throw new IllegalArgumentException("Invalid file");
         }
     }
+
+    // TODO: Within the SimpleTerminal object, keep track of all the users ?
+    // ? Should I do the login method here or in the User class?
 }
