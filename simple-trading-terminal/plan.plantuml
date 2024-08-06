@@ -1,0 +1,51 @@
+@startuml SimpleTradingTerminal
+
+class User {
+    // User details, like name
+    ArrayList<Book> books;
+
+    void grantControl(String user) // Checks for current permissions and grants control to user
+    boolean checkAccess(Book book)
+    ArrayList<Book> listBooks()
+
+    
+    
+
+
+}
+
+class Book {
+    String filePath;
+    ArrayList<Transaction> transactions;
+    ArrayList<User> accessors;
+
+    void grantControl(User user) // Adds user to accessors list
+    boolean checkAccess(User user)
+
+
+
+
+}
+
+class SimpleTerminal {
+    private User user;
+    private static String hashFilePath; OR File hashFile;
+    ' private 
+    private Book currentBook;
+    private HashMap<String bookPath, Book book>;
+
+    boolean logIn(String username, String password)
+    boolean logOut() // sets the the user to null
+    ArrayList<Transactions> position(String date)
+    ArrayList<Transactions> position(String bookPath, String date)
+    void changeBook(int bookNumber) // given a list of books available to a user, choose which one by index
+
+
+
+
+
+}
+
+User -- SimpleTerminal
+User -- Book
+@enduml

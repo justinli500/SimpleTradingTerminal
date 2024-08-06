@@ -26,6 +26,7 @@ public class Transaction {
     private static int currentTransactionIdentifier = 0;
 
     public Transaction() {
+        transactionIdentifier = currentTransactionIdentifier++;
     }
 
     public Transaction(String iCode, String date, String transactionType, double cleanTransactionPrice,
@@ -72,6 +73,10 @@ public class Transaction {
 
     public double getTotalSettlementAmount() {
         return totalSettlementAmount;
+    }
+
+    public int getTransactionIdentifier() {
+        return transactionIdentifier;
     }
 
     @Override

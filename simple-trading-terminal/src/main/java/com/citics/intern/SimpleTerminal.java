@@ -282,7 +282,7 @@ public class SimpleTerminal {
                 reader.readLine();
                 // reader.withSkipLines(3);
                 String line = reader.readLine();
-                System.out.println("LINE: \n" + line);
+                // System.out.println("LINE: \n" + line);
                 while (line != null) {
                     writer.write(line + "\n");
                     line = reader.readLine();
@@ -299,11 +299,52 @@ public class SimpleTerminal {
 
     }
 
-    private void queryTransaction(String filenName) {
+    public void queryTransactions(String fileName) {
+        try {
+            Reader reader = new FileReader(fileName);
+            CsvToBean<Transaction> csvReader = new CsvToBeanBuilder<Transaction>(reader)
+                    .withType(Transaction.class)
+                    .withSeparator(',')
+                    .withIgnoreLeadingWhiteSpace(true)
+                    .withIgnoreEmptyLine(true)
+                    .withIgnoreQuotations(true)
+                    // .withSkipLines(1)
+                    .build();
 
+            // csvReader.skip(1); // - Skip the first line with the headers
+            List<Transaction> list = csvReader.parse();
+            // * Load instruments into a map
+            for (int i = 0; i < list.size(); i++) {
+                System.out.println(list.get(i));
+            }
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Invalid file");
+        }
     }
 
-    private void queryTransaction(String fileName, String identifier) {
+    private void queryTransactions(String fileName, int identifier) {
+        try {
+            Reader reader = new FileReader(fileName);
+            CsvToBean<Transaction> csvReader = new CsvToBeanBuilder<Transaction>(reader)
+                    .withType(Transaction.class)
+                    .withSeparator(',')
+                    .withIgnoreLeadingWhiteSpace(true)
+                    .withIgnoreEmptyLine(true)
+                    .withIgnoreQuotations(true)
+                    // .withSkipLines(1)
+                    .build();
 
+            // csvReader.skip(1); // - Skip the first line with the headers
+            List<Transaction> list = csvReader.parse();
+            // * Load instruments into a map
+            for (int i = 0; i < list.size(); i++) {
+                if (list.get(i).getTransactionIdentifier() == identifier) {
+                    System.out.println(list.get(i));
+                }
+            }
+            throw new IllegalArgumentException("Transaction with identifier not found");
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Invalid file");
+        }
     }
 }
