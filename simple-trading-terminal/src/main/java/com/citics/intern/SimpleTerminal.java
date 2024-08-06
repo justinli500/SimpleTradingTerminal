@@ -31,10 +31,10 @@ public class SimpleTerminal {
     private Map<String, Instrument> instrumentsMap = new HashMap<>(); // - This is for finding the instrument by iCode
     private List<Transaction> transactions = new ArrayList<>(); // ? Necessary to add a HashMap?
     private boolean firstWrite = true;
+    private User currentUser;
+    private List<User> allUsers;
 
-    // TODO: Handle checking LOAD INSTRUMENTS, or just have the user enter
-    // TODO: Let the user select a set of instruments, select instrument, and then
-    // TODO: keep track of all the transactions with ArrayLists.
+    // TODO: Handle loading new instance variables when the user is switched
 
     static {
         // * All lower case so that there aren't any case issues
@@ -42,9 +42,9 @@ public class SimpleTerminal {
         commands.put("select_instrument", 1);
         commands.put("buy", 2);
         commands.put("sell", 3);
-        // commands.put("query", 4);
         commands.put("current_instrument", 4);
         commands.put("write_transactions", 5);
+        commands.put("query", 6);
     }
     // - Maybe use an ArrayList to store the instruments
     // - Can use a Refresh method to refresh on the directory
@@ -144,9 +144,10 @@ public class SimpleTerminal {
                     writeTransactions();
                     break;
 
-                // case 6:
-                // writeTransactions();
-                // break;
+                case 6:
+                    queryTransactions(input);
+                    break;
+
                 default:
                     throw new IllegalArgumentException("Default switch expression reached");
             }
@@ -348,6 +349,14 @@ public class SimpleTerminal {
         }
     }
 
+    public boolean login(String username, String password) {
+        // currentUser = new User()
+        return false;
+    }
+
     // TODO: Within the SimpleTerminal object, keep track of all the users ?
     // ? Should I do the login method here or in the User class?
+    // ? Should I be able to load users from a list of usernames and passwords?
+    // ? Perhaps not, but I should be able to log in
+    // ? But then how should I check for access easily?
 }

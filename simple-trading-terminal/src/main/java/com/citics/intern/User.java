@@ -14,7 +14,7 @@ public class User {
     private String username;
     // @CsvBindByName("LAST_NAME")
     // private String lastName;
-    private List<Book> books;
+    private List<Book> accessibleBooks;
     // private static
     // private static boolean firstWrite = true;
 
@@ -74,6 +74,12 @@ public class User {
     public String getUsername() {
         return username;
     }
+
+    // ? Where should I keep the list of users? From this, should I not include
+    // ? hashing stuff within this class? Because then
+    // public boolean isValidUser(String username) {
+
+    // }
 
     // public static Map<String, User> loadUsers(String filePath) {
     // Map<String, User> users = new HashMap<>();

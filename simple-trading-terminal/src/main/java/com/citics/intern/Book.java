@@ -23,7 +23,7 @@ import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 public class Book {
     String filePath;
     List<Transaction> transactions;
-    List<User> accessors; // ? Change it to a string of usernames?
+    List<String> accessors; // ? Change it to a list of strings or users?
 
     public Book(String filePath) {
         try {
@@ -49,11 +49,12 @@ public class Book {
         }
     }
 
-    public void grantControl(User user) {
+    public void grantControl(String username) {
+        accessors.add(username);
 
     }
 
-    public boolean checkAccess(User user) {
+    public boolean checkAccess(String username) {
         return false;
     }
 

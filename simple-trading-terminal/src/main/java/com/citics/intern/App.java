@@ -91,12 +91,12 @@ public class App {
         // // * again
         // if (counter % 10 == 0) {
         // System.out.println("\nList of possible commands (case insensitive):" +
-        // "\nLOAD INSTRUMENTS xxxx.csv" +
-        // "\nSELECT INSTRUMENT xxxx" +
-        // "\nBUY (xxxx.csv) or SELL (xxxx.csv). Enter BUY or SELL for the format of the
-        // parameters\n"
-        // +
-        // "\nCURRENT_INSTRUMENT");
+        //         "\nLOAD INSTRUMENTS xxxx.csv" +
+        //         "\nSELECT INSTRUMENT xxxx" +
+        //         "\nBUY (xxxx.csv) or SELL (xxxx.csv). Enter BUY or SELL for the format of the parameters" +
+        //         "\nCURRENT_INSTRUMENT" +
+        //         "\nWRITE_TRANSACTIONS" +
+        //         "\nQUERY\n");
         // }
         // if (counter == 0) {
         // System.out.println("Please enter your command:");
