@@ -30,28 +30,35 @@ public class App {
         // .loadInstruments("../../../../../../../债券信息1.csv");
 
         // - Testing the different functions below here
-        SimpleTerminal terminal = new SimpleTerminal();
-        terminal.loadInstruments("./债券信息1.csv");
-        terminal.selectInstrument("BBG00R953ZY1");
-        System.out.println(terminal.getCurrentInstrument());
+        // SimpleTerminal terminal = new SimpleTerminal();
+        // terminal.loadInstruments("./债券信息1.csv");
+        // terminal.selectInstrument("BBG00R953ZY1");
+        // System.out.println(terminal.getCurrentInstrument());
 
-        terminal.addTransaction("iCode", "date", "buy", 123,
-                123,
-                123, "settlementDate", 123);
-        terminal.writeTransactions();
-        terminal.addTransaction("iCode", "date", "sell", 123,
-                123,
-                123, "settlementDate", 123);
-        terminal.writeTransactions();
-        terminal.addTransaction("iCode", "date", "sell", 123,
-                123,
-                123, "settlementDate", 123);
-        terminal.addTransaction("iCode", "date", "sell", 123,
-                123,
-                123, "settlementDate", 123);
-        terminal.writeTransactions();
-        terminal.queryTransactions("transactions.csv");
-        // - Testing
+        // terminal.addTransaction("iCode", "date", "buy", 123,
+        // 123,
+        // 123, "settlementDate", 123);
+        // terminal.writeTransactions();
+        // terminal.addTransaction("iCode", "date", "sell", 123,
+        // 123,
+        // 123, "settlementDate", 123);
+        // terminal.writeTransactions();
+        // terminal.addTransaction("iCode", "date", "sell", 123,
+        // 123,
+        // 123, "settlementDate", 123);
+        // terminal.addTransaction("iCode", "date", "sell", 123,
+        // 123,
+        // 123, "settlementDate", 123);
+        // terminal.writeTransactions();
+        // terminal.queryTransactions("transactions.csv");
+        // - Testing all functions above
+
+        // - Testing out login system here
+        // SimpleTerminal terminal = new SimpleTerminal();
+        User userA = new User("John Smith", "userA", "123asdishdidhs");
+        User userB = new User("John Doe", "userB", "asdlkasdjalksjdasdl");
+
+        // - Testing out login system above
 
         // - Main app
         // int counter = 0;
