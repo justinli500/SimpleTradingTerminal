@@ -14,7 +14,7 @@ public class User {
     private String username;
     // @CsvBindByName("LAST_NAME")
     // private String lastName;
-    private List<Book> accessibleBooks;
+    private List<String> accessibleBooks;
     // private static
     // private static boolean firstWrite = true;
 
@@ -39,28 +39,24 @@ public class User {
 
         }
         String hash = "";
-        try {
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            md.update(password.getBytes());
-            byte[] digest = md.digest();
-            // hash = DatatypeConverter.printHexBinary(digest).toUpperCase();
-            StringBuilder hexBuilder = new StringBuilder();
-            for (byte curr : digest) {
-                hexBuilder.append(String.format("%02x", curr));
-            }
-            hash = hexBuilder.toString();
-        } catch (Exception e) {
+        // try {
+        // // TODO: Add salting
+        // MessageDigest md = MessageDigest.getInstance("MD5");
+        // md.update(password.getBytes());
+        // byte[] digest = md.digest();
+        // // hash = DatatypeConverter.printHexBinary(digest).toUpperCase();
+        // StringBuilder hexBuilder = new StringBuilder();
+        // for (byte curr : digest) {
+        // hexBuilder.append(String.format("%02x", curr));
+        // }
+        // hash = hexBuilder.toString();
+        // } catch (Exception e) {
 
-        }
+        // }
         try {
             // * Checking if the file is empty, to append or not
             BufferedReader br = new BufferedReader(new FileReader("users.csv"));
-            // if (firstWrite) {
-
-            // }
-            // usersFile.
-            // usersFile.write("asdsad");
-            usersFile.write(username + ", " + hash + "\n");
+            usersFile.write(username + ", " + getHash(password) + "\n");
             usersFile.close();
         } catch (Exception e) {
             System.out.println("Username and password write failed");
@@ -73,6 +69,30 @@ public class User {
 
     public String getUsername() {
         return username;
+    }
+
+    public void addBook(String bookName) {
+        accessibleBooks.add(bookName);
+    }
+
+    public static String getHash(String password) {
+        String hash = "";
+        try {
+            // TODO: Add salting
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            md.update(password.getBytes());
+            byte[] digest = md.digest();
+            // hash = DatatypeConverter.printHexBinary(digest).toUpperCase();
+            StringBuilder hexBuilder = new StringBuilder();
+            for (byte curr : digest) {
+                hexBuilder.append(String.format("%02x", curr));
+            }
+            hash = hexBuilder.toString();
+        } catch (Exception e) {
+
+        }
+        return hash;
+
     }
 
     // ? Where should I keep the list of users? From this, should I not include

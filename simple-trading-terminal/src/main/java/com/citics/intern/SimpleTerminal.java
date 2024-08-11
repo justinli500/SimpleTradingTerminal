@@ -11,10 +11,13 @@ import com.opencsv.bean.StatefulBeanToCsv;
 import com.opencsv.bean.StatefulBeanToCsvBuilder;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
+import java.io.BufferedReader;
+import java.security.MessageDigest;
 
 import java.io.FileReader;
 
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -26,13 +29,15 @@ public class SimpleTerminal {
     // Map<String, Function<>> map = new HashMap<>();
     // FunctionInetrface // - This is how to choose which command to use
     private String fileReadFrom; // - Incorporate this somehow
-    private String fileWriteTo;
+    private String fileWriteTo; // * fileWriteTo == currentBook?
     private Instrument currentInstrument;
     private Map<String, Instrument> instrumentsMap = new HashMap<>(); // - This is for finding the instrument by iCode
     private List<Transaction> transactions = new ArrayList<>(); // ? Necessary to add a HashMap?
     private boolean firstWrite = true;
     private User currentUser;
-    private List<User> allUsers;
+    private Map<String, User> allUsers = new HashMap<>();
+    private Map<String, String> logins = new HashMap<>();
+    private String currentBook;
 
     // TODO: Handle loading new instance variables when the user is switched
 
@@ -349,14 +354,109 @@ public class SimpleTerminal {
         }
     }
 
-    public boolean login(String username, String password) {
-        // currentUser = new User()
-        return false;
+    public void register(String fullName, String username, String password) {
+        if (allUsers.get(username) != null) {
+            throw new IllegalArgumentException("User already exists");
+        } else {
+            currentUser = new User(fullName, username, password);
+            allUsers.put(username, currentUser); // ? This line might cause a problem?
+            setFileWriteTo(username + "_" + "book"); // * Change the file we're writing to
+            String hash = User.getHash(password);
+            logins.put(username, hash);
+        }
     }
 
-    // TODO: Within the SimpleTerminal object, keep track of all the users ?
+    public void register(String fullName, String username, String password, String book) {
+        register(fullName, username, password);
+        setFileWriteTo(book);
+    }
+
+    /*
+     * login process:
+     * Register (check if the user already exists)? If not, enter username and
+     * passwords
+     * List all books, select which one
+     */
+    public boolean login(String username, String password) {
+        String hash = User.getHash(password);
+        // * Check if entered password equals the one in the database
+        if (hash.equals(logins.get(username))) {
+            currentUser = allUsers.get(username);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void loadUsers(String path) {
+        String line;
+        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
+            while ((line = br.readLine()) != null) {
+                // * Split the line into username and password
+                String[] login = line.split(",");
+                String username = login[0].trim();
+                String password = login[1].trim();
+                logins.put(username, password);
+            }
+        } catch (IOException e) {
+            e.printStackTrace(); // ? What does this do?
+        }
+    }
+
+    // ? Is it necessary to let the user choose a book on login?
+    // public boolean login(String username, String password, String book) {
+    // login(fullName, username, password);
+    // // - If a book isn't provided, create one for the user
+    // // currentUser = new User()
+    // return false;
+    // }
+
+    // TODO: Create loadUsers function
+
     // ? Should I do the login method here or in the User class?
     // ? Should I be able to load users from a list of usernames and passwords?
     // ? Perhaps not, but I should be able to log in
     // ? But then how should I check for access easily?
+
+    // - Meeting notes:
+    /*
+     * -
+     * 
+     * SimpleTerminal:
+     * - login and logout should go in SimpleTerminal
+     * - put all registered users in
+     * - username, password, accessible books (put all books in a quotation marks)
+     * - check how to save a list of books into a CSV
+     * - Load files first thing in the App.java, and then log in. If the user
+     * doesn't exist, then register, then write into files
+     * - Also include a registering process
+     * - If the user isn't logged in, then don't allow any processes
+     * - logout: user = null;
+     * - if user == null, then not logged in
+     * - load users into a map, list, or set.
+     * - serialize
+     * - writeToCsv - you can tell the OpenCSV thing how to separate the elements
+     * - String book property, in transactions?
+     * - User: String bookName
+     * -
+     * 
+     * - TradeBook:
+     * - no accessible
+     * - add a Book property into a transaction, so that you can see which book the
+     * transaction belongs to
+     * - in reality, they might store an ID, and user. No transaction details
+     * - all transactions are in a massive table, and can store information about
+     * which book
+     * - during transaction, you don't need to know too much about books
+     * -
+     * 
+     * Authentication:
+     * - only your own program knows what the salted thing is, but there must be a
+     * pattern, so that you can treat different users differently
+     * - salt: even if the password is unencrypted, they won't know what the
+     * password is
+     * -
+     */
+
+    // TODO: Create a wipe all method
 }

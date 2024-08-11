@@ -54,7 +54,11 @@ public class App {
         // - Testing all functions above
 
         // - Testing out login system here
-        // SimpleTerminal terminal = new SimpleTerminal();
+        SimpleTerminal terminal = new SimpleTerminal();
+        // terminal.register("John Smith", "john123", "123123");
+        terminal.loadUsers("users.csv");
+        System.out.println(terminal.login("john123", "123123"));
+
         // User userA = new User("John Smith", "userA", "123asdishdidhs");
         // User userB = new User("John Doe", "userB", "asdlkasdjalksjdasdl");
         // - Testing out login system above
@@ -91,12 +95,13 @@ public class App {
         // // * again
         // if (counter % 10 == 0) {
         // System.out.println("\nList of possible commands (case insensitive):" +
-        //         "\nLOAD INSTRUMENTS xxxx.csv" +
-        //         "\nSELECT INSTRUMENT xxxx" +
-        //         "\nBUY (xxxx.csv) or SELL (xxxx.csv). Enter BUY or SELL for the format of the parameters" +
-        //         "\nCURRENT_INSTRUMENT" +
-        //         "\nWRITE_TRANSACTIONS" +
-        //         "\nQUERY\n");
+        // "\nLOAD INSTRUMENTS xxxx.csv" +
+        // "\nSELECT INSTRUMENT xxxx" +
+        // "\nBUY (xxxx.csv) or SELL (xxxx.csv). Enter BUY or SELL for the format of the
+        // parameters" +
+        // "\nCURRENT_INSTRUMENT" +
+        // "\nWRITE_TRANSACTIONS" +
+        // "\nQUERY\n");
         // }
         // if (counter == 0) {
         // System.out.println("Please enter your command:");
