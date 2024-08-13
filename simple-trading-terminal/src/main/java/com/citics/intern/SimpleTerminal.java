@@ -373,7 +373,7 @@ public class SimpleTerminal {
     }
 
     public void register(String fullName, String username, String password) {
-        register(fullName, username, password, username + "_BOOK");
+        register(fullName, username, password, username + "_BOOK.csv");
 
     }
 
@@ -392,6 +392,15 @@ public class SimpleTerminal {
             return true;
         } else {
             return false;
+        }
+    }
+
+    public boolean logout() {
+        if (currentUser == null) {
+            return false;
+        } else {
+            currentUser = null;
+            return true;
         }
     }
 
@@ -533,5 +542,17 @@ public class SimpleTerminal {
 
         }
 
+    }
+
+    public boolean changeBook(String bookName) throws IllegalStateException {
+        if (currentUser == null) {
+            throw new IllegalStateException("Current user not selected");
+        }
+        if (currentUser.checkBookAccess(bookName)) {
+            setFileWriteTo(bookName);
+            return true;
+        } else {
+            return false;
+        }
     }
 }

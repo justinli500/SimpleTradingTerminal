@@ -55,7 +55,8 @@ public class App {
 
         // - Testing out login system here
         SimpleTerminal terminal = new SimpleTerminal();
-        // terminal.register("John Smith", "john123", "123123");
+        terminal.register("John Smith", "john123", "123123");
+        System.out.println(terminal.changeBook("john123_BOOK.cs"));
         // terminal.writeUsers();
         // terminal.loadUsers("users.csv");
         // System.out.println(terminal.login("john123", "123123"));
@@ -63,8 +64,8 @@ public class App {
         // User userA = new User("John Smith", "userA", "123asdishdidhs");
         // User userB = new User("John Doe", "userB", "asdlkasdjalksjdasdl");
 
-        terminal.loadUsers("users.csv");
-        terminal.printUsers();
+        // terminal.loadUsers("users.csv");
+        // terminal.printUsers();
         // - Testing out login system above
 
         // - Testing out the book class here

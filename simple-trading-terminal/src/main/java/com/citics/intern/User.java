@@ -72,6 +72,15 @@ public class User {
 
     }
 
+    public boolean checkBookAccess(String bookName) {
+        for (String currBook : accessibleBooks) {
+            if (bookName.equals(currBook)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void printBooks() {
         for (String book : accessibleBooks) {
             System.out.println(book);
