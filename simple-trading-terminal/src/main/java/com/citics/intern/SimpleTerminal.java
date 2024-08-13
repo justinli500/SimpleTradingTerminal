@@ -554,5 +554,15 @@ public class SimpleTerminal {
         } else {
             return false;
         }
+        // ? Are these boolean return values necessary?
+    }
+
+    public void grantAccess(String targetUsername, String bookName) throws IllegalStateException {
+        if (currentUser == null) {
+            throw new IllegalStateException("Current user not selected");
+        } else if (currentUser.checkBookAccess(bookName)) {
+            throw new IllegalStateException("Current user does not have access to given book");
+        }
+        allUsers.get(targetUsername).addBook(bookName);
     }
 }
