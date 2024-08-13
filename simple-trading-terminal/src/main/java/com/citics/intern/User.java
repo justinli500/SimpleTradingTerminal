@@ -4,63 +4,40 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.security.MessageDigest;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.opencsv.bean.*;
+import com.opencsv.bean.CsvBindAndSplitByName;
+import com.opencsv.bean.CsvBindByName;
+
 public class User {
-    // @CsvBindByName("FIRST_NAME")
+    @CsvBindByName(column = "FULL_NAME")
     private String fullName;
+    @CsvBindByName(column = "USERNAME")
     private String username;
-    // @CsvBindByName("LAST_NAME")
-    // private String lastName;
-    private List<String> accessibleBooks;
-    // private static
-    // private static boolean firstWrite = true;
+    // @CsvBindByName(column = "USER_BOOKS")
+    // TODO: fix this so that the values are separated by commas
+    @CsvBindAndSplitByName(column = "USER_BOOKS", elementType = String.class, splitOn = ",") // - Issue on this line,
+                                                                                             // - not creating commas
+    private List<String> accessibleBooks = new ArrayList<>();
+    @CsvBindByName(column = "PASSWORD_HASH")
+    private String passwordHash;
 
     private static FileWriter usersFile;
 
     public User(String fullName, String username, String password) {
         this.fullName = fullName;
         this.username = username;
+        this.passwordHash = getHash(password);
         // * Overwrite if it's the first time writing, append otherwise
-        if (usersFile == null) {
-            try {
-                usersFile = new FileWriter("users.csv", false);
-            } catch (Exception e) {
-                throw new IllegalAccessError("Error creating the usersFile");
-            }
-        } else {
-            try {
-                usersFile = new FileWriter("users.csv", true);
-            } catch (Exception e) {
-                throw new IllegalAccessError("Error creating the usersFile");
-            }
+    }
 
-        }
-        String hash = "";
-        // try {
-        // // TODO: Add salting
-        // MessageDigest md = MessageDigest.getInstance("MD5");
-        // md.update(password.getBytes());
-        // byte[] digest = md.digest();
-        // // hash = DatatypeConverter.printHexBinary(digest).toUpperCase();
-        // StringBuilder hexBuilder = new StringBuilder();
-        // for (byte curr : digest) {
-        // hexBuilder.append(String.format("%02x", curr));
-        // }
-        // hash = hexBuilder.toString();
-        // } catch (Exception e) {
-
-        // }
-        try {
-            // * Checking if the file is empty, to append or not
-            BufferedReader br = new BufferedReader(new FileReader("users.csv"));
-            usersFile.write(username + ", " + getHash(password) + "\n");
-            usersFile.close();
-        } catch (Exception e) {
-            System.out.println("Username and password write failed");
-        }
+    public User(String fullName, String username, String password, List<String> books) {
+        this(fullName, username, password);
+        accessibleBooks = books;
     }
 
     public String getFullName() {
@@ -93,6 +70,18 @@ public class User {
         }
         return hash;
 
+    }
+
+    public void printBooks() {
+        for (String book : accessibleBooks) {
+            System.out.println(book);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "User [fullName=" + fullName + ", username=" + username + ", accessibleBooks=" + accessibleBooks
+                + ", password=" + passwordHash + "]";
     }
 
     // ? Where should I keep the list of users? From this, should I not include

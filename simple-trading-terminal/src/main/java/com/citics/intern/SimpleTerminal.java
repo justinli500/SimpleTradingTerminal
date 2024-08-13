@@ -354,21 +354,27 @@ public class SimpleTerminal {
         }
     }
 
-    public void register(String fullName, String username, String password) {
+    public void register(String fullName, String username, String password, String book) {
+
         if (allUsers.get(username) != null) {
             throw new IllegalArgumentException("User already exists");
         } else {
             currentUser = new User(fullName, username, password);
             allUsers.put(username, currentUser); // ? This line might cause a problem?
-            setFileWriteTo(username + "_" + "book"); // * Change the file we're writing to
+            setFileWriteTo(book); // * Change the file we're writing to
             String hash = User.getHash(password);
             logins.put(username, hash);
+            currentUser.addBook(book);
+            // currentUser.addBook("second_book"); // -
+            // currentUser.addBook("third_book"); // -
+
         }
+
     }
 
-    public void register(String fullName, String username, String password, String book) {
-        register(fullName, username, password);
-        setFileWriteTo(book);
+    public void register(String fullName, String username, String password) {
+        register(fullName, username, password, username + "_BOOK");
+
     }
 
     /*
@@ -377,6 +383,7 @@ public class SimpleTerminal {
      * passwords
      * List all books, select which one
      */
+
     public boolean login(String username, String password) {
         String hash = User.getHash(password);
         // * Check if entered password equals the one in the database
@@ -391,15 +398,35 @@ public class SimpleTerminal {
     public void loadUsers(String path) {
         String line;
         try (BufferedReader br = new BufferedReader(new FileReader(path))) {
+            br.readLine();
             while ((line = br.readLine()) != null) {
                 // * Split the line into username and password
                 String[] login = line.split(",");
-                String username = login[0].trim();
-                String password = login[1].trim();
+                String fullName = login[0].replace("\"", "");
+                String password = login[1].replace("\"", "");
+                String username = login[2].replace("\"", "");
+                String books = login[3].replace("\"", "");
                 logins.put(username, password);
+                // register(books, username, password);
+                List<String> booksList = new ArrayList<>();
+                String[] booksArray = books.split(" ");
+                for (String book : booksArray) {
+                    booksList.add(book);
+                }
+                // System.out.println(fullName);
+                // System.out.println(username);
+                // System.out.println(password);
+                // System.out.println(booksArray[0]);
+                allUsers.put(username, new User(fullName, username, password, booksList));
             }
         } catch (IOException e) {
             e.printStackTrace(); // ? What does this do?
+        }
+    }
+
+    public void printUsers() {
+        for (String username : allUsers.keySet()) {
+            System.out.println(allUsers.get(username));
         }
     }
 
@@ -410,8 +437,6 @@ public class SimpleTerminal {
     // // currentUser = new User()
     // return false;
     // }
-
-    // TODO: Create loadUsers function
 
     // ? Should I do the login method here or in the User class?
     // ? Should I be able to load users from a list of usernames and passwords?
@@ -459,4 +484,54 @@ public class SimpleTerminal {
      */
 
     // TODO: Create a wipe all method
+
+    public void writeUsers() {
+        try {
+            // * Will append firstWrite is false, and overwrite if firstWrite is true
+            if (true) {
+                FileWriter fileWriter = new FileWriter("users.csv", !firstWrite);
+                List<User> usersList = new ArrayList<>();
+                for (String key : allUsers.keySet()) {
+                    usersList.add(allUsers.get(key));
+                }
+                // BufferedWriter bw = new BufferedWriter(fw);
+                // PrintWriter out = new PrintWriter(bw);
+                StatefulBeanToCsv<User> beanToCsv = new StatefulBeanToCsvBuilder<User>(fileWriter)
+                        .withApplyQuotesToAll(true).build();
+                beanToCsv.write(usersList);
+                fileWriter.close(); // writer needs to be closed
+                if (!firstWrite) {
+                    System.out.println("File appended successfully");
+                } else {
+                    System.out.println("File created/overwritten successfully");
+                }
+                // transactions.clear();
+                // firstWrite = false;
+            } else { // TODO: Do something with this?
+                StringWriter stringWriter = new StringWriter();
+                StatefulBeanToCsv<Transaction> beanToCsv = new StatefulBeanToCsvBuilder<Transaction>(stringWriter)
+                        .withApplyQuotesToAll(true).build();
+                beanToCsv.write(transactions);
+                String transacsString = stringWriter.toString();
+                BufferedReader reader = new BufferedReader(new StringReader(transacsString));
+                FileWriter writer = new FileWriter(fileWriteTo, true);
+                reader.readLine();
+                // reader.withSkipLines(3);
+                String line = reader.readLine();
+                // System.out.println("LINE: \n" + line);
+                while (line != null) {
+                    writer.write(line + "\n");
+                    line = reader.readLine();
+                }
+                writer.close();
+
+            }
+
+            // out.close(); // - It's necessary to close this stream or something
+        } catch (Exception e) {
+            System.out.println("File failed, reason: \n" + e);
+
+        }
+
+    }
 }
