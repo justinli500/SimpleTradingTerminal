@@ -22,6 +22,8 @@ public class Transaction implements Comparable<Transaction> {
     private String settlementDate;
     @CsvBindByName(column = "TOTAL_SETTLEMENT_AMOUNT")
     private double totalSettlementAmount;
+    @CsvBindByName(column = "BOOK")
+    private String book;
     @CsvBindByName(column = "TRANSACTION_IDENTIFIER")
     private final int transactionIdentifier;
 
@@ -33,7 +35,7 @@ public class Transaction implements Comparable<Transaction> {
 
     public Transaction(String iCode, String tradeDate, String transactionType, double cleanTransactionPrice,
             double dirtyTransactionPrice,
-            double transactionAmount, String settlementDate, double totalSettlementAmount) {
+            double transactionAmount, String settlementDate, double totalSettlementAmount, String book) {
         this.iCode = iCode;
         this.tradeDate = tradeDate;
         this.transactionType = transactionType;
@@ -42,6 +44,7 @@ public class Transaction implements Comparable<Transaction> {
         this.transactionAmount = transactionAmount;
         this.settlementDate = settlementDate;
         this.totalSettlementAmount = totalSettlementAmount;
+        this.book = book;
         transactionIdentifier = currentTransactionIdentifier++;
     }
 

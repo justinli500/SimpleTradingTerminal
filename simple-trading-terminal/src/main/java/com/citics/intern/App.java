@@ -53,9 +53,16 @@ public class App {
         // terminal.queryTransactions("transactions.csv");
         // - Testing all functions above
 
-        // - Testing out login system here
+        // - Testing out login system and transaction system here
         // SimpleTerminal terminal = new SimpleTerminal();
         // terminal.register("John Smith", "john123", "123123");
+        // terminal.loadInstruments("./债券信息1.csv");
+        // // terminal.loadInstruments("./债卷信息1.csv"); // - 1 character difference
+        // terminal.selectInstrument("BBG00R953ZY1");
+        // terminal.addTransaction("BBG00R953ZY1", "11/22/2024", "buy", 1, 1, 1,
+        // "11.11.2021", 1);
+        // terminal.writeTransactions();
+
         // System.out.println(terminal.changeBook("john123_BOOK.cs"));
         // terminal.writeUsers();
         // terminal.loadUsers("users.csv");
@@ -69,14 +76,16 @@ public class App {
         // - Testing out login system above
 
         // - Testing out the readTransactions() method here
-        SimpleTerminal terminal = new SimpleTerminal();
-        terminal.setFileWriteTo("transactions.csv");
-        terminal.readTransactions();
-        terminal.printAllTransactions();
-        Transaction transaction1 = new Transaction("iCode", "11/22/2024", "buy", 1, 1, 1, "11.11.2021", 1);
-        Transaction transaction2 = new Transaction("iCode", "11/22/2025", "buy", 1, 1, 1, "11.11.2022", 1);
-        System.out.println(transaction1.compareTo(transaction2));
-        System.out.println(transaction1.convertToDate());
+        // SimpleTerminal terminal = new SimpleTerminal();
+        // terminal.setFileWriteTo("transactions.csv");
+        // terminal.readTransactions();
+        // terminal.printAllTransactions();
+        // Transaction transaction1 = new Transaction("iCode", "11/22/2024", "buy", 1,
+        // 1, 1, "11.11.2021", 1);
+        // Transaction transaction2 = new Transaction("iCode", "11/22/2025", "buy", 1,
+        // 1, 1, "11.11.2022", 1);
+        // System.out.println(transaction1.compareTo(transaction2));
+        // System.out.println(transaction1.convertToDate());
         // - Testing out the readTransactions() method above
 
         // - Testing out the book class here

@@ -233,6 +233,9 @@ public class SimpleTerminal {
         if (currentInstrument == null) {
             throw new IllegalStateException("No instrument selected yet");
         }
+        if (currentUser == null) {
+            throw new IllegalStateException("No user selected yet");
+        }
         // assert (buyOrSell.equalsIgnoreCase("buy")) ||
         // (buyOrSell.equalsIgnoreCase("sell"))
         // : "Invalid transaction type";
@@ -244,7 +247,7 @@ public class SimpleTerminal {
         // - clean price
 
         Transaction curr = new Transaction(iCode, date, transactionType, cleanTransactionPrice, dirtyTransactionPrice,
-                transactionAmount, settlementDate, settlementAmount);
+                transactionAmount, settlementDate, settlementAmount, fileWriteTo);
         transactions.add(curr);
     }
 
@@ -259,9 +262,13 @@ public class SimpleTerminal {
 
         try {
 
+            if (currentUser == null) {
+                throw new IllegalAccessException("Current user not selected");
+            }
             // * Will append firstWrite is false, and overwrite if firstWrite is true
             if (fileWriteTo == null) {
-                fileWriteTo = "transactions.csv";
+                fileWriteTo = currentUser.getUsername() + "_BOOK.csv";
+                System.out.println(currentUser.getUsername());
             }
             if (firstWrite) {
                 FileWriter fileWriter = new FileWriter(fileWriteTo, !firstWrite);
@@ -596,5 +603,10 @@ public class SimpleTerminal {
         }
 
     }
+
+    // TODO: add "book" attribute for transaction and change all constructors
+    // public List<Transaction> position(String book) {
+
+    // }
 
 }
