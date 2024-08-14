@@ -38,6 +38,7 @@ public class SimpleTerminal {
     private Map<String, User> allUsers = new HashMap<>();
     private Map<String, String> logins = new HashMap<>();
     private String currentBook;
+    // private List<Transaction> transactionsList = new ArrayList<>();
 
     // TODO: Handle loading new instance variables when the user is switched
 
@@ -354,6 +355,27 @@ public class SimpleTerminal {
         }
     }
 
+    public void readTransactions() {
+        try {
+            Reader reader = new FileReader(fileWriteTo);
+            CsvToBean<Transaction> csvReader = new CsvToBeanBuilder<Transaction>(reader)
+                    .withType(Transaction.class)
+                    .withSeparator(',')
+                    .withIgnoreLeadingWhiteSpace(true)
+                    .withIgnoreEmptyLine(true)
+                    .withIgnoreQuotations(true)
+                    // .withSkipLines(1)
+                    .build();
+
+            // * Load transactions into a list
+            List<Transaction> list = csvReader.parse();
+            transactions = list;
+            // transactionsList = list;
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Invalid file");
+        }
+    }
+
     public void register(String fullName, String username, String password, String book) {
 
         if (allUsers.get(username) != null) {
@@ -565,4 +587,14 @@ public class SimpleTerminal {
         }
         allUsers.get(targetUsername).addBook(bookName);
     }
+
+    public void getPosition(String targetBook) throws IllegalStateException {
+        if (currentUser == null) {
+            throw new IllegalStateException("Current user not selected");
+        } else if (currentUser.checkBookAccess(targetBook)) {
+            throw new IllegalStateException("Current user does not have access to given book");
+        }
+
+    }
+
 }
