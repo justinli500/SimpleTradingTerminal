@@ -13,6 +13,7 @@ import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import java.io.BufferedReader;
 import java.security.MessageDigest;
+import java.time.LocalDate;
 
 import java.io.FileReader;
 
@@ -38,6 +39,7 @@ public class SimpleTerminal {
     private Map<String, User> allUsers = new HashMap<>();
     private Map<String, String> logins = new HashMap<>();
     private String currentBook;
+    private List<Transaction> allTransactions = new ArrayList<>();
     // private List<Transaction> transactionsList = new ArrayList<>();
 
     // TODO: Handle loading new instance variables when the user is switched
@@ -247,13 +249,19 @@ public class SimpleTerminal {
         // - clean price
 
         Transaction curr = new Transaction(iCode, date, transactionType, cleanTransactionPrice, dirtyTransactionPrice,
-                transactionAmount, settlementDate, settlementAmount, fileWriteTo);
+                transactionAmount, settlementDate, settlementAmount, currentUser.getUsername(), fileWriteTo);
         transactions.add(curr);
+        allTransactions.add(curr);
+        // System.out.println(transactions.size());
+
+        // System.out.println(curr);
     }
 
     public void printAllTransactions() {
-        for (Transaction curr : transactions) {
+        // System.out.println(transactions.size());
+        for (Transaction curr : allTransactions) {
             System.out.println(curr);
+            // System.out.println(1);
         }
     }
 
@@ -313,6 +321,7 @@ public class SimpleTerminal {
 
     }
 
+    // ? Is this still needed?
     public void queryTransactions(String fileName) {
         try {
             Reader reader = new FileReader(fileName);
@@ -376,7 +385,7 @@ public class SimpleTerminal {
 
             // * Load transactions into a list
             List<Transaction> list = csvReader.parse();
-            transactions = list;
+            transactions = list; // ? What to do here? Should I read to allTransactions instead?
             // transactionsList = list;
         } catch (Exception e) {
             throw new IllegalArgumentException("Invalid file");
@@ -384,7 +393,6 @@ public class SimpleTerminal {
     }
 
     public void register(String fullName, String username, String password, String book) {
-
         if (allUsers.get(username) != null) {
             throw new IllegalArgumentException("User already exists");
         } else {
@@ -402,7 +410,20 @@ public class SimpleTerminal {
     }
 
     public void register(String fullName, String username, String password) {
-        register(fullName, username, password, username + "_BOOK.csv");
+        if (allUsers.get(username) != null) {
+            throw new IllegalArgumentException("User already exists");
+        } else {
+            currentUser = new User(fullName, username, password);
+            allUsers.put(username, currentUser); // ? This line might cause a problem?
+            setFileWriteTo(currentUser.getUsername() + "_BOOK.csv"); // * Change the file we're writing to
+            String hash = User.getHash(password);
+            logins.put(username, hash);
+            currentUser.addBook(currentUser.getUsername() + "_BOOK.csv"); // * Can't reuse register method because of
+                                                                          // * this line
+            // currentUser.addBook("second_book"); // -
+            // currentUser.addBook("third_book"); // -
+
+        }
 
     }
 
@@ -595,13 +616,40 @@ public class SimpleTerminal {
         allUsers.get(targetUsername).addBook(bookName);
     }
 
-    public void getPosition(String targetBook) throws IllegalStateException {
+    public List<Transaction> getPosition(String targetBook) throws IllegalStateException {
         if (currentUser == null) {
             throw new IllegalStateException("Current user not selected");
-        } else if (currentUser.checkBookAccess(targetBook)) {
+        } else if (!(currentUser.checkBookAccess(targetBook))) {
             throw new IllegalStateException("Current user does not have access to given book");
         }
+        List<Transaction> returner = new ArrayList<>();
+        for (Transaction curr : allTransactions) {
+            if (curr.getBook().equals(targetBook)) {
+                returner.add(curr);
+            }
+        }
+        if (returner.isEmpty()) {
+            throw new IllegalArgumentException("Book not found"); // ? Is this necessary?
+        }
+        return returner;
+    }
 
+    public List<Transaction> getPosition(String targetBook, String date) {
+        if (currentUser == null) {
+            throw new IllegalStateException("Current user not selected");
+        } else if (!(currentUser.checkBookAccess(targetBook))) {
+            throw new IllegalStateException("Current user does not have access to given book");
+        }
+        List<Transaction> returner = new ArrayList<>();
+        List<Transaction> targetBookTransactions = getPosition(targetBook);
+
+        for (Transaction curr : targetBookTransactions) {
+            if (curr.compareTo(date) <= 0) {
+                // System.out.println(curr);
+                returner.add(curr);
+            }
+        }
+        return returner;
     }
 
     // TODO: add "book" attribute for transaction and change all constructors

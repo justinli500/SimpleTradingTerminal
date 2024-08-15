@@ -22,6 +22,8 @@ public class Transaction implements Comparable<Transaction> {
     private String settlementDate;
     @CsvBindByName(column = "TOTAL_SETTLEMENT_AMOUNT")
     private double totalSettlementAmount;
+    @CsvBindByName(column = "USER")
+    private String user;
     @CsvBindByName(column = "BOOK")
     private String book;
     @CsvBindByName(column = "TRANSACTION_IDENTIFIER")
@@ -35,7 +37,7 @@ public class Transaction implements Comparable<Transaction> {
 
     public Transaction(String iCode, String tradeDate, String transactionType, double cleanTransactionPrice,
             double dirtyTransactionPrice,
-            double transactionAmount, String settlementDate, double totalSettlementAmount, String book) {
+            double transactionAmount, String settlementDate, double totalSettlementAmount, String user, String book) {
         this.iCode = iCode;
         this.tradeDate = tradeDate;
         this.transactionType = transactionType;
@@ -44,6 +46,7 @@ public class Transaction implements Comparable<Transaction> {
         this.transactionAmount = transactionAmount;
         this.settlementDate = settlementDate;
         this.totalSettlementAmount = totalSettlementAmount;
+        this.user = user;
         this.book = book;
         transactionIdentifier = currentTransactionIdentifier++;
     }
@@ -53,8 +56,10 @@ public class Transaction implements Comparable<Transaction> {
 
     @Override
     public int compareTo(Transaction rhsTransaction) {
-        LocalDate localDate1 = this.convertToDate();
-        LocalDate localDate2 = rhsTransaction.convertToDate();
+        LocalDate localDate1 = convertToDate(this.getTradeDate());
+        LocalDate localDate2 = convertToDate(rhsTransaction.getTradeDate());
+        // LocalDate localDate1 = this.convertToDate();
+        // LocalDate localDate2 = rhsTransaction.convertToDate();
         if (localDate1.isBefore(localDate2)) {
             return -1;
         } else if (localDate1.isAfter(localDate2)) {
@@ -64,8 +69,22 @@ public class Transaction implements Comparable<Transaction> {
         }
     }
 
-    public LocalDate convertToDate() {
-        String date = this.getTradeDate();
+    public int compareTo(String date) {
+        LocalDate localDate1 = convertToDate(this.getTradeDate());
+        LocalDate localDate2 = convertToDate(date);
+        // LocalDate localDate1 = this.convertToDate();
+        // LocalDate localDate2 = rhsTransaction.convertToDate();
+        if (localDate1.isBefore(localDate2)) {
+            return -1;
+        } else if (localDate1.isAfter(localDate2)) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+    public static LocalDate convertToDate(String date) {
+        // String date = this.getTradeDate();
         String[] splitDate = date.replaceAll("[-/,.]", " ").split(" ");
 
         // * Assuming that the date passed in will be MM-DD-YYYY
@@ -112,13 +131,17 @@ public class Transaction implements Comparable<Transaction> {
         return transactionIdentifier;
     }
 
+    public String getBook() {
+        return book;
+    }
+
     @Override
     public String toString() {
         return "Transaction [iCode=" + iCode + ", tradeDate=" + tradeDate + ", transactionType=" + transactionType
                 + ", cleanTransactionPrice=" + cleanTransactionPrice + ", dirtyTransactionPrice="
                 + dirtyTransactionPrice + ", transactionAmount=" + transactionAmount + ", settlementDate="
-                + settlementDate + ", totalSettlementAmount=" + totalSettlementAmount + ", transactionIdentifier="
-                + transactionIdentifier + "]";
+                + settlementDate + ", totalSettlementAmount=" + totalSettlementAmount + ", user=" + user + ", book="
+                + book + ", transactionIdentifier=" + transactionIdentifier + "]";
     }
 
 }

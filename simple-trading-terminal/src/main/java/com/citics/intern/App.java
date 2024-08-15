@@ -54,15 +54,24 @@ public class App {
         // - Testing all functions above
 
         // - Testing out login system and transaction system here
-        // SimpleTerminal terminal = new SimpleTerminal();
-        // terminal.register("John Smith", "john123", "123123");
-        // terminal.loadInstruments("./债券信息1.csv");
+        SimpleTerminal terminal = new SimpleTerminal();
+        terminal.register("John Smith", "john123", "123123");
+        terminal.loadInstruments("./债券信息1.csv");
         // // terminal.loadInstruments("./债卷信息1.csv"); // - 1 character difference
-        // terminal.selectInstrument("BBG00R953ZY1");
-        // terminal.addTransaction("BBG00R953ZY1", "11/22/2024", "buy", 1, 1, 1,
-        // "11.11.2021", 1);
-        // terminal.writeTransactions();
-
+        terminal.selectInstrument("BBG00R953ZY1");
+        terminal.addTransaction("BBG00R953ZY1", "11/22/2024", "buy", 1, 1, 1,
+                "11.11.2021", 1);
+        terminal.addTransaction("BBG00R953ZY1", "11/22/2024", "buy", 1, 1, 1,
+                "11.11.2021", 1);
+        terminal.writeTransactions(); // - Writing transactions clears list of transactions!
+        // terminal.printAllTransactions();
+        List<Transaction> position = terminal.getPosition("john123_BOOK.csv",
+                "11/22/2023");
+        // TODO: fix getPosition with date
+        // List<Transaction> position = terminal.getPosition("john123_BOOK.csv");
+        for (Transaction curr : position) {
+            System.out.println(curr);
+        }
         // System.out.println(terminal.changeBook("john123_BOOK.cs"));
         // terminal.writeUsers();
         // terminal.loadUsers("users.csv");
@@ -81,11 +90,11 @@ public class App {
         // terminal.readTransactions();
         // terminal.printAllTransactions();
         // Transaction transaction1 = new Transaction("iCode", "11/22/2024", "buy", 1,
-        // 1, 1, "11.11.2021", 1);
+        // 1, 1, "11.11.2021", 1, "OK");
         // Transaction transaction2 = new Transaction("iCode", "11/22/2025", "buy", 1,
-        // 1, 1, "11.11.2022", 1);
+        // 1, 1, "11.11.2022", 1, "OK");
         // System.out.println(transaction1.compareTo(transaction2));
-        // System.out.println(transaction1.convertToDate());
+        // System.out.println(Transaction.convertToDate(transaction1.getTradeDate()));
         // - Testing out the readTransactions() method above
 
         // - Testing out the book class here
