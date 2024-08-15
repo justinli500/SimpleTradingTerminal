@@ -410,6 +410,7 @@ public class SimpleTerminal {
     }
 
     public void register(String fullName, String username, String password) {
+        // ? If the user has unwritten transactions, should I write them or clear them?
         if (allUsers.get(username) != null) {
             throw new IllegalArgumentException("User already exists");
         } else {
@@ -420,6 +421,7 @@ public class SimpleTerminal {
             logins.put(username, hash);
             currentUser.addBook(currentUser.getUsername() + "_BOOK.csv"); // * Can't reuse register method because of
                                                                           // * this line
+            System.out.println("User registered and logged in successfully");
             // currentUser.addBook("second_book"); // -
             // currentUser.addBook("third_book"); // -
 
@@ -435,14 +437,19 @@ public class SimpleTerminal {
      */
 
     public boolean login(String username, String password) {
+        // ? If the user has unwritten transactions, should I write them or clear them?
         String hash = User.getHash(password);
         // * Check if entered password equals the one in the database
         if (hash.equals(logins.get(username))) {
             currentUser = allUsers.get(username);
+            System.out.println("User logged in successfully");
             return true;
-        } else {
-            return false;
+        } else if (allUsers.get(username) == null) {
+            throw new IllegalStateException("User with entered username does not exist");
+        } else if (!(hash.equals(logins.get(username)))) {
+            throw new IllegalStateException("Incorrect password");
         }
+        return false;
     }
 
     public boolean logout() {
@@ -455,32 +462,98 @@ public class SimpleTerminal {
     }
 
     public void loadUsers(String path) {
-        String line;
-        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
-            br.readLine();
-            while ((line = br.readLine()) != null) {
-                // * Split the line into username and password
-                String[] login = line.split(",");
-                String fullName = login[0].replace("\"", "");
-                String password = login[1].replace("\"", "");
-                String username = login[2].replace("\"", "");
-                String books = login[3].replace("\"", "");
-                logins.put(username, password);
-                // register(books, username, password);
-                List<String> booksList = new ArrayList<>();
-                String[] booksArray = books.split(" ");
-                for (String book : booksArray) {
-                    booksList.add(book);
-                }
-                // System.out.println(fullName);
-                // System.out.println(username);
-                // System.out.println(password);
-                // System.out.println(booksArray[0]);
-                allUsers.put(username, new User(fullName, username, password, booksList));
+        try {
+            Reader reader = new FileReader(path);
+            CsvToBean<User> csvReader = new CsvToBeanBuilder<User>(reader)
+                    .withType(User.class)
+                    .withSeparator(',')
+                    .withIgnoreLeadingWhiteSpace(true)
+                    .withIgnoreEmptyLine(true)
+                    .withIgnoreQuotations(true)
+                    // .withSkipLines(1)
+                    .build();
+
+            // * Load transactions into a list
+            List<User> list = csvReader.parse();
+            Map<String, User> newUsers = new HashMap<>();
+            Map<String, String> newLogins = new HashMap<>();
+
+            // ? Should I clear the old users if I'm reading in new users?
+            allUsers.clear();
+            logins.clear();
+
+            for (User curr : list) {
+                newUsers.put(curr.getUsername(), curr);
+                newLogins.put(curr.getUsername(), curr.getPasswordHash());
+                // System.out.println("User added");
             }
-        } catch (IOException e) {
-            e.printStackTrace(); // ? What does this do?
+
+            allUsers = newUsers;
+            logins = newLogins;
+
+            // usersList = list;
+            // transactionsList = list;
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Invalid file");
         }
+        // String line;
+        // try (BufferedReader br = new BufferedReader(new FileReader(path))) {
+        // br.readLine();
+        // while ((line = br.readLine()) != null) {
+        // // * Split the line into username and password
+        // String[] login = line.split(",");
+        // String fullName = login[0].replace("\"", "");
+        // String password = login[1].replace("\"", "");
+        // String username = login[2].replace("\"", "");
+        // String books = login[3].replace("\"", "");
+        // logins.put(username, password);
+        // // register(books, username, password);
+        // List<String> booksList = new ArrayList<>();
+        // String[] booksArray = books.split(" ");
+        // for (String book : booksArray) {
+        // booksList.add(book);
+        // }
+        // // System.out.println(fullName);
+        // // System.out.println(username);
+        // // System.out.println(password);
+        // // System.out.println(booksArray[0]);
+        // allUsers.put(username, new User(fullName, username, password, booksList));
+        // }
+        // } catch (IOException e) {
+        // e.printStackTrace(); // ? What does this do?
+        // }
+    }
+
+    public void writeUsers(String path) {
+        try {
+            if (currentUser == null) {
+                throw new IllegalAccessException("Current user not selected");
+            }
+            // * Will append firstWrite is false, and overwrite if firstWrite is true
+            if (fileWriteTo == null) {
+                fileWriteTo = currentUser.getUsername() + "_BOOK.csv";
+                System.out.println(currentUser.getUsername());
+            }
+            if (firstWrite) {
+                FileWriter fileWriter = new FileWriter(fileWriteTo, !firstWrite);
+                // BufferedWriter bw = new BufferedWriter(fw);
+                // PrintWriter out = new PrintWriter(bw);
+                StatefulBeanToCsv<Transaction> beanToCsv = new StatefulBeanToCsvBuilder<Transaction>(fileWriter)
+                        .withApplyQuotesToAll(true).build();
+                beanToCsv.write(transactions);
+                fileWriter.close(); // writer needs to be closed
+                if (!firstWrite) {
+                    System.out.println("File appended successfully");
+                } else {
+                    System.out.println("File created/overwritten successfully");
+                }
+                transactions.clear();
+                firstWrite = false;
+            }
+        } catch (Exception e) {
+
+        }
+        // TODO: implement this method
     }
 
     public void printUsers() {
@@ -602,7 +675,7 @@ public class SimpleTerminal {
             setFileWriteTo(bookName);
             return true;
         } else {
-            return false;
+            throw new IllegalStateException("Current user does not have access to given book");
         }
         // ? Are these boolean return values necessary?
     }
@@ -610,7 +683,7 @@ public class SimpleTerminal {
     public void grantAccess(String targetUsername, String bookName) throws IllegalStateException {
         if (currentUser == null) {
             throw new IllegalStateException("Current user not selected");
-        } else if (currentUser.checkBookAccess(bookName)) {
+        } else if (!(currentUser.checkBookAccess(bookName))) {
             throw new IllegalStateException("Current user does not have access to given book");
         }
         allUsers.get(targetUsername).addBook(bookName);

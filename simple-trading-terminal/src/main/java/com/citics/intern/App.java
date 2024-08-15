@@ -54,24 +54,25 @@ public class App {
         // - Testing all functions above
 
         // - Testing out login system and transaction system here
-        SimpleTerminal terminal = new SimpleTerminal();
-        terminal.register("John Smith", "john123", "123123");
-        terminal.loadInstruments("./债券信息1.csv");
-        // // terminal.loadInstruments("./债卷信息1.csv"); // - 1 character difference
-        terminal.selectInstrument("BBG00R953ZY1");
-        terminal.addTransaction("BBG00R953ZY1", "11/22/2024", "buy", 1, 1, 1,
-                "11.11.2021", 1);
-        terminal.addTransaction("BBG00R953ZY1", "11/22/2024", "buy", 1, 1, 1,
-                "11.11.2021", 1);
-        terminal.writeTransactions(); // - Writing transactions clears list of transactions!
-        // terminal.printAllTransactions();
-        List<Transaction> position = terminal.getPosition("john123_BOOK.csv",
-                "11/22/2023");
-        // TODO: fix getPosition with date
-        // List<Transaction> position = terminal.getPosition("john123_BOOK.csv");
-        for (Transaction curr : position) {
-            System.out.println(curr);
-        }
+        // SimpleTerminal terminal = new SimpleTerminal();
+        // terminal.register("John Smith", "john123", "123123");
+        // terminal.loadInstruments("./债券信息1.csv");
+        // // // terminal.loadInstruments("./债卷信息1.csv"); // - 1 character difference
+        // terminal.selectInstrument("BBG00R953ZY1");
+        // terminal.addTransaction("BBG00R953ZY1", "11/22/2024", "buy", 1, 1, 1,
+        // "11.11.2021", 1);
+        // terminal.addTransaction("BBG00R953ZY1", "11/22/2024", "buy", 1, 1, 1,
+        // "11.11.2021", 1);
+        // terminal.writeTransactions(); // - Writing transactions clears list of
+        // transactions!
+        // // terminal.printAllTransactions();
+        // List<Transaction> position = terminal.getPosition("john123_BOOK.csv",
+        // "11/22/2023");
+        // // TODO: fix getPosition with date
+        // // List<Transaction> position = terminal.getPosition("john123_BOOK.csv");
+        // for (Transaction curr : position) {
+        // System.out.println(curr);
+        // }
         // System.out.println(terminal.changeBook("john123_BOOK.cs"));
         // terminal.writeUsers();
         // terminal.loadUsers("users.csv");
@@ -83,6 +84,46 @@ public class App {
         // terminal.loadUsers("users.csv");
         // terminal.printUsers();
         // - Testing out login system above
+
+        // - Testing out loadUsers() below
+        SimpleTerminal terminal = new SimpleTerminal();
+        terminal.loadUsers("users.csv");
+        System.out.println(terminal.login("john123", "123123"));
+        terminal.printUsers();
+        // terminal.register("James Doe", "james123", "124124");
+        // terminal.writeUsers();
+
+        // - Testing our loadUsers() above
+
+        // - Testing out access authorization system here
+        // SimpleTerminal terminal = new SimpleTerminal();
+        // terminal.register("John Smith", "john123", "123123");
+        // terminal.loadInstruments("./债券信息1.csv");
+        // terminal.selectInstrument("BBG00R953ZY1");
+        // terminal.addTransaction("BBG00R953ZY1", "11/22/2024", "buy", 1, 1, 1,
+        // "11.11.2021", 1);
+        // terminal.addTransaction("BBG00R953ZY1", "11/22/2024", "buy", 1, 1, 1,
+        // "11.11.2021", 1);
+        // terminal.writeTransactions(); // - Writing transactions clears list of
+        // transactions!
+        // List<Transaction> position = terminal.getPosition("john123_BOOK.csv",
+        // "11/22/2023");
+        // for (Transaction curr : position) {
+        // System.out.println(curr);
+        // }
+
+        // terminal.register("James Doe", "james123", "124124");
+        // // terminal.changeBook("john123_BOOK.csv");
+        // terminal.login("john123", "123123");
+        // terminal.grantAccess("james123", "john123_BOOK.csv");
+
+        // terminal.login("james123", "124124");
+        // terminal.changeBook("john123_BOOK.csv");
+        // terminal.addTransaction("BBG00R953ZY1", "11/22/2024", "buy", 1, 1, 1,
+        // "11.11.2021", 1);
+        // terminal.writeTransactions();
+
+        // - Testing out access authorization system above
 
         // - Testing out the readTransactions() method here
         // SimpleTerminal terminal = new SimpleTerminal();

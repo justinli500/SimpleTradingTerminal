@@ -40,12 +40,20 @@ public class User {
         accessibleBooks = books;
     }
 
+    public User() {
+
+    }
+
     public String getFullName() {
         return fullName;
     }
 
     public String getUsername() {
         return username;
+    }
+
+    public String getPasswordHash() {
+        return passwordHash;
     }
 
     public void addBook(String bookName) {
