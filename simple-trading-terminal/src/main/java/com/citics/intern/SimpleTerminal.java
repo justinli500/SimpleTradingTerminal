@@ -153,7 +153,7 @@ public class SimpleTerminal {
                     break;
 
                 case 6:
-                    queryTransactions(input);
+                    queryTransactions();
                     break;
 
                 default:
@@ -322,9 +322,58 @@ public class SimpleTerminal {
     }
 
     // ? Is this still needed?
-    public void queryTransactions(String fileName) {
+    // public void queryTransactions(String fileName) {
+    // try {
+    // Reader reader = new FileReader(fileName);
+    // CsvToBean<Transaction> csvReader = new CsvToBeanBuilder<Transaction>(reader)
+    // .withType(Transaction.class)
+    // .withSeparator(',')
+    // .withIgnoreLeadingWhiteSpace(true)
+    // .withIgnoreEmptyLine(true)
+    // .withIgnoreQuotations(true)
+    // // .withSkipLines(1)
+    // .build();
+
+    // // csvReader.skip(1); // - Skip the first line with the headers
+    // List<Transaction> list = csvReader.parse();
+    // // * Load instruments into a map
+    // for (int i = 0; i < list.size(); i++) {
+    // System.out.println(list.get(i));
+    // }
+    // } catch (Exception e) {
+    // throw new IllegalArgumentException("Invalid file");
+    // }
+    // }
+
+    // private void queryTransactions(String fileName, int identifier) {
+    // try {
+    // Reader reader = new FileReader(fileName);
+    // CsvToBean<Transaction> csvReader = new CsvToBeanBuilder<Transaction>(reader)
+    // .withType(Transaction.class)
+    // .withSeparator(',')
+    // .withIgnoreLeadingWhiteSpace(true)
+    // .withIgnoreEmptyLine(true)
+    // .withIgnoreQuotations(true)
+    // // .withSkipLines(1)
+    // .build();
+
+    // // csvReader.skip(1); // - Skip the first line with the headers
+    // List<Transaction> list = csvReader.parse();
+    // // * Load transactions into a list
+    // for (int i = 0; i < list.size(); i++) {
+    // if (list.get(i).getTransactionIdentifier() == identifier) {
+    // System.out.println(list.get(i));
+    // }
+    // }
+    // throw new IllegalArgumentException("Transaction with identifier not found");
+    // } catch (Exception e) {
+    // throw new IllegalArgumentException("Invalid file");
+    // }
+    // }
+
+    public void queryTransactions() {
         try {
-            Reader reader = new FileReader(fileName);
+            Reader reader = new FileReader(currentBook);
             CsvToBean<Transaction> csvReader = new CsvToBeanBuilder<Transaction>(reader)
                     .withType(Transaction.class)
                     .withSeparator(',')
@@ -341,13 +390,15 @@ public class SimpleTerminal {
                 System.out.println(list.get(i));
             }
         } catch (Exception e) {
+            System.out.println(currentBook);
+            // System.out.println(e);
             throw new IllegalArgumentException("Invalid file");
         }
     }
 
-    private void queryTransactions(String fileName, int identifier) {
+    public void queryTransactions(int identifier) {
         try {
-            Reader reader = new FileReader(fileName);
+            Reader reader = new FileReader(currentBook);
             CsvToBean<Transaction> csvReader = new CsvToBeanBuilder<Transaction>(reader)
                     .withType(Transaction.class)
                     .withSeparator(',')
@@ -363,10 +414,12 @@ public class SimpleTerminal {
             for (int i = 0; i < list.size(); i++) {
                 if (list.get(i).getTransactionIdentifier() == identifier) {
                     System.out.println(list.get(i));
+                    return;
                 }
             }
             throw new IllegalArgumentException("Transaction with identifier not found");
         } catch (Exception e) {
+            // System.out.println(e);
             throw new IllegalArgumentException("Invalid file");
         }
     }
@@ -442,6 +495,7 @@ public class SimpleTerminal {
         // * Check if entered password equals the one in the database
         if (hash.equals(logins.get(username))) {
             currentUser = allUsers.get(username);
+            currentBook = username + "_BOOK.csv";
             System.out.println("User logged in successfully");
             return true;
         } else if (allUsers.get(username) == null) {
@@ -727,6 +781,7 @@ public class SimpleTerminal {
 
     // TODO: add "book" attribute for transaction and change all constructors
     // public List<Transaction> position(String book) {
+    // TODO: update methods to check for access and stuff and error checking
 
     // }
 

@@ -86,14 +86,22 @@ public class App {
         // - Testing out login system above
 
         // - Testing out loadUsers() below
+        // SimpleTerminal terminal = new SimpleTerminal();
+        // terminal.loadUsers("users.csv");
+        // System.out.println(terminal.login("john123", "123123"));
+        // terminal.printUsers();
+        // terminal.register("James Doe", "james123", "124124");
+        // terminal.writeUsers();
+        // - Testing our loadUsers() above
+
+        // - Testing out updated queryTransactions() methods below
         SimpleTerminal terminal = new SimpleTerminal();
         terminal.loadUsers("users.csv");
         System.out.println(terminal.login("john123", "123123"));
-        terminal.printUsers();
-        // terminal.register("James Doe", "james123", "124124");
-        // terminal.writeUsers();
+        // terminal.queryTransactions();
+        terminal.queryTransactions(2);
 
-        // - Testing our loadUsers() above
+        // - Testing out updated queryTransactions() methods above
 
         // - Testing out access authorization system here
         // SimpleTerminal terminal = new SimpleTerminal();
